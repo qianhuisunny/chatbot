@@ -56,74 +56,78 @@
     border-radius: 0;
   }
 
-  .chat-container {
-    height: 100%;
+  .main-container {
     display: flex;
-    flex-direction: column;
+    height: 100%;
   }
+
+  .scenario-container {
+  position: fixed;
+  width: 40%;
+  height: 100%;
+  overflow-y: auto;
+  }
+
+  .chat-container {
+  margin-left: 40%; /* Adjust as needed */
+  }
+
 </style>
 {% endblock %}
 
-
 {% block content %}
-<div class="chat-container">
-  <div class="card flex-grow-1">
-    <div class="card-header bg-primary text-white">Chat</div>
-    {% if user.is_authenticated %}
-    <div class="card-header bg-primary text-white"><b>Welcome, {{user.username}}</b> <a style="color: yellow;"
-        href="logout">Logout</a></div>
-    {% else %}
-    <div class="card-header bg-primary text-white"><a style="color: yellow;" href="login">Login</a> <a
-        style="color: yellow;" href="register">Register</a></div>
-    {% endif %}
-    <div class="card-body messages-box">
 
-      <ul class="list-unstyled messages-list">
+<div class="container-fluid">
+  <div class="row main-container">
+    <div class="scenario-container col-md-5">
+      <h1>Scenario</h1>
+      <br>
+      <h3>Learning Objectives</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet accumsan elit, eu semper elit. Curabitur iaculis eros ut sapien vestibulum, id feugiat sapien ullamcorper. Phasellus ullamcorper efficitur tortor, in mollis elit commodo et. Donec non sapien elit. Sed nec lacus in purus congue luctus. Vivamus semper elit vitae libero volutpat, sit amet commodo libero fermentum. Praesent commodo, eros a efficitur fermentum, est ligula ultrices neque, in ultrices justo quam at erat. Curabitur finibus odio non justo commodo, vel sagittis lacus consectetur. Pellentesque auctor purus ut hendrerit interdum. Nam id magna a dui fringilla vestibulum et at odio. Suspendisse bibendum massa ac laoreet convallis.
 
-        <!-- <li class="message received">
-          <div class="message-text">
-            <div class="message-sender">
-              <b>AI Chatbot</b>
+        Nullam ac nisl vel eros lacinia dictum a sed nibh. Aenean in dui in tellus interdum pellentesque. Fusce vitae augue vitae libero congue vulputate. Sed nec sem vehicula, viverra elit ut, sagittis nisl. Donec vestibulum justo ligula, id bibendum nisl posuere at. Proin sit amet erat et odio vestibulum efficitur. Phasellus tempor arcu ut nibh convallis, in sagittis erat lacinia. Vestibulum sollicitudin tortor eu ex hendrerit, sed interdum est consequat. Fusce tristique sem at elit tempus aliquet. Sed ut pharetra quam, ut pharetra ipsum.
+        
+        In vehicula justo sit amet libero finibus, sed gravida tortor tristique. Cras eu vehicula massa. Vivamus finibus magna mi, vel lacinia turpis lacinia id. Vivamus sed massa ut urna venenatis laoreet vel nec erat. Praesent at auctor turpis. Etiam et augue aliquet, malesuada odio nec, cursus tellus. Nulla facilisi. Donec volutpat, purus sit amet dignissim euismod, ligula velit congue nunc, vitae porttitor massa erat vitae elit. Nam venenatis efficitur tortor nec feugiat.
+        
+        </p>
+    </div>   
+    <div class="chat-container col-md-7">
+          {% for chat in chats %}
+          {% if chat.user == request.user %}
+
+          <ul class="list-unstyled messages-list"></ul>
+          <li class="message sent">
+            <div class="message-text">
+              <div class="message-sender">
+                <b>You</b>
+              </div>
+              <div class="message-content">
+                {{chat.message}}
+              </div>
             </div>
-            <div class="message-content">
-              Hi {{user.username}}, I am your AI Chatbot, you can ask me anything.
+          </li>
+
+          <li class="message received">
+            <div class="message-text">
+              <div class="message-sender">
+                <b>AI Chatbot</b>
+              </div>
+              <div class="message-content">
+                {{chat.response}}
+              </div>
             </div>
-          </div>
-        </li> -->
+          </li>
 
+          {% endif %}
+          {% endfor %}
 
-        {% for chat in chats %}
-        {% if chat.user == request.user %}
-
-
-        <li class="message sent">
-          <div class="message-text">
-            <div class="message-sender">
-              <b>You</b>
-            </div>
-            <div class="message-content">
-              {{chat.message}}
-            </div>
-          </div>
-        </li>
-
-        <li class="message received">
-          <div class="message-text">
-            <div class="message-sender">
-              <b>AI Chatbot</b>
-            </div>
-            <div class="message-content">
-              {{chat.response}}
-            </div>
-          </div>
-        </li>
-
-        {% endif %}
-        {% endfor %}
-
-      </ul>
+          
 
     </div>
+  </div>
+</div>      
+
+  <div>
     <br><br>
     <br><br>
     <br><br>
@@ -154,6 +158,7 @@
 
     const messageItem = document.createElement('li');
     messageItem.classList.add('message', 'sent');
+    console.log ('shuolesha!_____',messageItem)
     messageItem.innerHTML = `
       <div class="message-text">
         <div class="message-sender">
@@ -197,3 +202,19 @@
 </script>
 
 {% endblock %}
+
+<!-------
+<div class="chat-container">
+  <div class="card flex-grow-1">
+    <div class="card-header bg-primary text-white">Chat</div>
+    {% if user.is_authenticated %}
+    <div class="card-header bg-primary text-white"><b>Welcome, {{user.username}}</b> <a style="color: yellow;"
+        href="logout">Logout</a></div>
+    {% else %}
+    <div class="card-header bg-primary text-white"><a style="color: yellow;" href="login">Login</a> <a
+        style="color: yellow;" href="register">Register</a></div>
+    {% endif %}
+    <div class="card-body messages-box">
+
+      
+--->
