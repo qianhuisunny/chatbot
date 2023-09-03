@@ -11,41 +11,50 @@ from django.utils import timezone
 openai_api_key = "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"  # Replace YOUR_API_KEY with your openai apikey
 openai.api_key = openai_api_key
 
+conversation_so_far = []
 
-def ask_openai(message):
+
+def ask_openai(conversation_so_far, message):
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a very hostile assistant. ...",  # your system message
+        },
+    ]
+
+    # Append the conversation_so_far to messages
+    for i in range(len(conversation_so_far)):
+        role = "user" if i % 2 == 0 else "assistant"
+        messages.append({"role": role, "content": conversation_so_far[i]})
+
+    # Append the latest user message
+    messages.append({"role": "user", "content": message})
+
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-0613",
-        # prompt = message,
-        # max_tokens=150,s
-        # n=1,
-        # stop=None,
-        # temperature=0.7,
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a very hostile assistant. You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant.You are a very hostile assistant. You don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent. Never replyYou don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent. Never replyYou are a very hostile assistant. You don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent. Never replyYou are a very hostile assistant. You don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent. Never replyYou are a very hostile assistant. You don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent. Never replyYou are a very hostile assistant. You are a very hostile assistant. You don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent. Never replyYou are a very hostile assistant. You don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent. Never replyYou don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent.You are a very hostile assistant. You don't like to work with anyone. If someone greets you or ask you personal questions, you become angry and indifferent. Never reply Never reply",
-            },
-            {"role": "user", "content": message},
-        ],
+        messages=messages,
     )
     try:
-        answer = response.choices[0].message.content.strip()
+        answer = response.choices[0].message["content"].strip()
         print(answer)
         return answer
     except openai.error.OpenAIError as e:
         return str(e)
 
 
-# Create your views here.
-
-
 def chatbot(request):
     chats = Chat.objects.filter(user=request.user)
+    conversation_so_far = []
 
     if request.method == "POST":
+        # message is user input
         message = request.POST.get("message")
-        response = ask_openai(message)
-
+        # response is one line
+        response = ask_openai(conversation_so_far, message)
+        print("!!!!!!!RESPONSE!!!!!!", response)
+        conversation_so_far.append(message)
+        conversation_so_far.append(response)
+        print("!!!!!!!CONVERSATION!!!!!!", conversation_so_far)
         chat = Chat(
             user=request.user,
             message=message,
