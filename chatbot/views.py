@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import openai
-
+import os
 from django.contrib import auth
 from django.contrib.auth.models import User
 from .models import Chat
@@ -10,15 +10,36 @@ from django.utils import timezone
 
 openai_api_key = "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"  # Replace YOUR_API_KEY with your openai apikey
 openai.api_key = openai_api_key
-
 conversation_so_far = []
+
+WORK_DIR = "/Users/qianhuisun/Desktop/Chatbot/django-chatgpt-chatbot/chatbot"
+CONTENT_FILE_NAME = "system_message.txt"
+
+
+def get_system_message_content():
+    try:
+        content_path = os.path.join(WORK_DIR, CONTENT_FILE_NAME)
+        with open(content_path, "r") as file:
+            content = file.read()
+            return content
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+def clear_chat(request):
+    if request.user.is_authenticated:
+        Chat.objects.filter(user=request.user).delete()
+        return JsonResponse({"status": "success"})
+    else:
+        return JsonResponse({"status": "error", "message": "User not authenticated"})
 
 
 def ask_openai(conversation_so_far, message):
+    system_message_content = get_system_message_content()
     messages = [
         {
             "role": "system",
-            "content": "You are a very hostile assistant. ...",  # your system message
+            "content": system_message_content,  # system message
         },
     ]
 

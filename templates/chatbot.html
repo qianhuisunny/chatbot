@@ -76,30 +76,51 @@
 {% endblock %}
 
 {% block content %}
-
+<meta name="csrf-token" content="{{ csrf_token }}">
 <div class="container-fluid">
   <div class="row main-container">
     <div class="scenario-container col-md-5">
       <h1>Scenario</h1>
-      <br>
-      <h3>Learning Objectives</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet accumsan elit, eu semper elit. Curabitur iaculis eros ut sapien vestibulum, id feugiat sapien ullamcorper. Phasellus ullamcorper efficitur tortor, in mollis elit commodo et. Donec non sapien elit. Sed nec lacus in purus congue luctus. Vivamus semper elit vitae libero volutpat, sit amet commodo libero fermentum. Praesent commodo, eros a efficitur fermentum, est ligula ultrices neque, in ultrices justo quam at erat. Curabitur finibus odio non justo commodo, vel sagittis lacus consectetur. Pellentesque auctor purus ut hendrerit interdum. Nam id magna a dui fringilla vestibulum et at odio. Suspendisse bibendum massa ac laoreet convallis.
-
-        Nullam ac nisl vel eros lacinia dictum a sed nibh. Aenean in dui in tellus interdum pellentesque. Fusce vitae augue vitae libero congue vulputate. Sed nec sem vehicula, viverra elit ut, sagittis nisl. Donec vestibulum justo ligula, id bibendum nisl posuere at. Proin sit amet erat et odio vestibulum efficitur. Phasellus tempor arcu ut nibh convallis, in sagittis erat lacinia. Vestibulum sollicitudin tortor eu ex hendrerit, sed interdum est consequat. Fusce tristique sem at elit tempus aliquet. Sed ut pharetra quam, ut pharetra ipsum.
-        
-        In vehicula justo sit amet libero finibus, sed gravida tortor tristique. Cras eu vehicula massa. Vivamus finibus magna mi, vel lacinia turpis lacinia id. Vivamus sed massa ut urna venenatis laoreet vel nec erat. Praesent at auctor turpis. Etiam et augue aliquet, malesuada odio nec, cursus tellus. Nulla facilisi. Donec volutpat, purus sit amet dignissim euismod, ligula velit congue nunc, vitae porttitor massa erat vitae elit. Nam venenatis efficitur tortor nec feugiat.
-        
+      <br><button class="begin-chat-button">Begin Chat</button>
+      <div class="message-text">
+        <b>The Success of the Meeting could be defined as:</b>
+          <ol>to come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint;</ol>
+          <ol>to establish the basis for a successful future business relationship with Steve personally and with Luse on a corporate level;</ol>
+          <ol>to demonstrate credibility for yourself and for EY.</ol>
+      </div>
+      <h3>About the Family-Owned Business: Luse Holdings Inc.</h3>
+        <p>Your Partner onboarded you to this new client Luse Holdings, a Chicago-based family-owned company that has had over 100 years of history. Starting as a roofing contractor, Luse Holdings now has six operating companies: 3 contracting businesses which include a union labor contracting business, non-union labor contracting business, medical staffing business, 
+          2 Consulting & Safety Services providing safety consulting, safety personnel staffing, safety training, and occupational health services to the construction industry, 1 distribution service as a vertical integration. 
         </p>
+        <h4>What are the challenges Luse Holdings is facing?</h4>
+          <ul>In May 2015, Luse lost a bid to a non-union contractor for the first time, making them contemplate on a potential pivot in their strategy due to market-level shifts in the cost of doing business. They are considering whether to go non-union in Chicago and whether to exit the contracting business altogether. </ul>
+          <ul>Another challenge is the lack of an obvious successor within the Luse family. It's uncertain if any fifth-generation member would have both the competencies and the desire to lead the business. As Steve Luse approaches his ideal retirement age, the company's strategic plan needs to incorporate his personal exit strategy.</ul>
+        <h4>What are some potential solutions: </h4>
+          <ul><br>Stay the course:</br> Keep on the same path and continue the trajectory of growth, both organically and through acquisitions. Potentially become an early mover in going non-union and win significant work with lower-priced labor. Work to identify a family member who could eventually rise to the leadership position. If no family member proved suitable, hire an outside CEO and maintain family ownership and chairman status.</ul>
+          <ul><br>Break it up: </br> Separate the company’s intermingled operating companies into independent entities, then sell off the most difficult or least productive businesses, taking money off the table to invest elsewhere and to diversify risk with some family liquidity. Move forward not with a bigger business, but with a more streamlined one.</ul>
+          <ul><br>Sell it off: </br> Work with an outside advisor to sell the entire Luse family of companies as well as the real estate owned by the holding company. Free up capital to fund other family interests.</ul>
+          <p>The advisory board urged Steve (the CEO) to choose a path within the next six months.</p>
+        <h3>Your Role as an EY Consultant: </h3>
+          <p>You have set up a meeting with Steve, the CEO/Owner of Luse. You’ve had a few previous meetings with Steve, however as you’ve recently transitioned onto the account from the previous account leader, you don’t yet have a very close relationship. You’re new to the account and want to create the right impression and help Steve think through ideas to help Luse navigate the increasingly challenging environment and explore next steps, to better understand views of other key stakeholders and also build relationships across the company. You feel there is a lot of opportunity to help Steve and the board navigate what’s ahead for the company, and for Steve and his family.  </p>
+          <h4>Your broad objectives are: </h4>
+            <ol>to come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint;</ol>
+            <ol>to establish the basis for a successful future business relationship with Steve personally and with Luse on a corporate level;</ol>
+            <ol>to demonstrate credibility for yourself and for EY.</ol>
+          <p>However, as part of your preparation for the meeting, it is up to you to define your own specific criteria for measuring your team’s success.You have not been able to find out much about Steve personally, but from conversations with others you understand that Steve is incredibly passionate about Luse, its people and its legacy as a company. We don’t have any evidence which suggests that Steve is a particularly strong supporter of EY, but we don’t think he is particularly negative towards us either. In discussions with the previous account leader Steve has been described as passionate, opinionated and charismatic.</p>
+          <br>
+          <br>
+        
+
     </div>   
     <div class="chat-container col-md-7">
+      <ul class="list-unstyled messages-list">
           {% for chat in chats %}
           {% if chat.user == request.user %}
-
-          <ul class="list-unstyled messages-list"></ul>
+          <div class="card-body messages-box"></div>
           <li class="message sent">
             <div class="message-text">
               <div class="message-sender">
-                <b>You</b>
+                <b>You-EY Consultant</b>
               </div>
               <div class="message-content">
                 {{chat.message}}
@@ -110,7 +131,7 @@
           <li class="message received">
             <div class="message-text">
               <div class="message-sender">
-                <b>AI Chatbot</b>
+                <b>Steve Luse-CEO of Luse Holdings</b>
               </div>
               <div class="message-content">
                 {{chat.response}}
@@ -120,8 +141,7 @@
 
           {% endif %}
           {% endfor %}
-
-          
+        </ul>
 
     </div>
   </div>
@@ -162,7 +182,7 @@
     messageItem.innerHTML = `
       <div class="message-text">
         <div class="message-sender">
-          <b>You</b>
+          <b>You-EY Consultant</b>
         </div>
         <div class="message-content">
           ${message}
@@ -188,7 +208,7 @@
         messageItem.innerHTML = `
         <div class="message-text">
           <div class="message-sender">
-            <b>AI Chatbot</b>
+            <b>Steve-CEO of Luse Holdings</b>
           <div>
           <div class="message-content">
             ${response}
@@ -200,6 +220,32 @@
   });
 
 </script>
+
+<!--This is to clear previous Chat histories-->
+<script>
+  document.querySelector('.begin-chat-button').addEventListener('click', function() {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      fetch('/clear_chat/', {
+          method: 'POST',
+          headers: {
+              'X-Requested-With': 'XMLHttpRequest',  // To indicate AJAX request
+              'X-CSRFToken': csrfToken
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.status === 'success') {
+              // Clear chat messages from the screen
+              document.querySelector('.messages-list').innerHTML = '';
+          } else {
+              console.error(data.message);
+          }
+      });
+  });
+</script>
+
+<!---This is to end the meeting and show feedback-->
+
 
 {% endblock %}
 
