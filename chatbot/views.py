@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import openai
+
 import os
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -8,12 +9,12 @@ from .models import Chat
 
 from django.utils import timezone
 
-openai_api_key = "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"  # Replace YOUR_API_KEY with your openai apikey
+openai_api_key = "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"  # Replace YOUR_API_KEY with your openai apikey
 openai.api_key = openai_api_key
 conversation_so_far = []
 
 WORK_DIR = "/Users/qianhuisun/Desktop/Chatbot/django-chatgpt-chatbot/chatbot"
-CONTENT_FILE_NAME = "system_message.txt"
+CONTENT_FILE_NAME = "system_message2.txt"
 
 
 def get_system_message_content():
@@ -26,6 +27,9 @@ def get_system_message_content():
         print(f"Error: {e}")
 
 
+SYSTEM_PROMT = get_system_message_content()
+
+
 def clear_chat(request):
     if request.user.is_authenticated:
         Chat.objects.filter(user=request.user).delete()
@@ -34,8 +38,8 @@ def clear_chat(request):
         return JsonResponse({"status": "error", "message": "User not authenticated"})
 
 
-def ask_openai(conversation_so_far, message):
-    system_message_content = get_system_message_content()
+def ask_openai(user_message, assistant_message, message):
+    system_message_content = SYSTEM_PROMT
     messages = [
         {
             "role": "system",
@@ -44,15 +48,15 @@ def ask_openai(conversation_so_far, message):
     ]
 
     # Append the conversation_so_far to messages
-    for i in range(len(conversation_so_far)):
-        role = "user" if i % 2 == 0 else "assistant"
-        messages.append({"role": role, "content": conversation_so_far[i]})
-
-    # Append the latest user message
+    for i in range(len(user_message)):
+        messages.append({"role": "user", "content": user_message[i]})
+        messages.append({"role": "assistant", "content": assistant_message[i]})
     messages.append({"role": "user", "content": message})
 
+    print("!!!!--API messages", messages)
+
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
+        model="gpt-4",
         messages=messages,
     )
     try:
@@ -63,18 +67,20 @@ def ask_openai(conversation_so_far, message):
         return str(e)
 
 
+user_message = []
+assistant_message = []
+
+
 def chatbot(request):
     chats = Chat.objects.filter(user=request.user)
-    conversation_so_far = []
 
     if request.method == "POST":
         # message is user input
         message = request.POST.get("message")
         # response is one line
-        response = ask_openai(conversation_so_far, message)
-        print("!!!!!!!RESPONSE!!!!!!", response)
-        conversation_so_far.append(message)
-        conversation_so_far.append(response)
+        response = ask_openai(user_message, assistant_message, message)
+        user_message.append(message)
+        assistant_message.append(response)
         print("!!!!!!!CONVERSATION!!!!!!", conversation_so_far)
         chat = Chat(
             user=request.user,
