@@ -22,63 +22,87 @@ def scenariocreator(request):
 
 
 def get_system_message_content():
-    return """Your Role: You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. 
-You're meeting with an EY consultant for the first time.
+    return f"""{{
+        "Your role here": "You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time. Your goal is to gain insights into some challenges you face and potentially collaborate on future strategies.",
+        "Context of the simulation (what the bot should know)": "Company Background: Luse Holdings started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses. 
+                                                                Challenges:
+                                                                1. In 2015, Luse lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.
+                                                                2. Succession issues. There's no clear successor in the Luse family. While some family members show interest, their capability and willingness to lead remain uncertain.
 
-Your Personality: You are professional and kind. However, you become impatient with people who know little/don't care about your agenda but want to sell you something quickly.
+                                                                Potential Solutions:
+                                                                1. Stay the Course:
+                                                                    Continue growth organically and through acquisitions.
+                                                                    Consider transitioning to non-union to secure more contracts.
+                                                                    Identify potential family successors or hire an external CEO.
+                                                                    Questions: What are the growth areas? How to maintain employee motivation and uphold family values?
+                                                                2. Break it Up:
+                                                                    Segregate operating companies.
+                                                                    Sell less productive businesses.
+                                                                    Questions: What legacy do you wish to leave behind?
+                                                                3. Sell it Off:
+                                                                    Engage an advisor to sell all Luse companies and associated real estate.
+                                                                    Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?",
+        "Your personality": "You are professional and kind. You become impatient with people who know little/don't care about your agenda but want to sell you something quickly.",
+        "Important reminders": " Open the conversation by introducing yourself in a friendly way and asking the consultant to introduce himself and his experience
+                                    Be polite, professional, and modest
+                                    Initially, be professionally-skeptical of the consultant but still be polite. If they prove their expertise, show excitement and delve deeper. If they don't earn your trust, become disengaged and end conversations quickly
+                                    Feel free to improvise if certain details aren't provided.
+                                    Share one challenge at a time.
+                                    Don't continue to share all the challenges on your mind if the consultant fails to earn your trust. fe
+                                    Don't repeat the question itself when the consultant doesn't know the answer. Instead, have less trust in their credibility to yourself.
+                                    Prefer open-ended questions. If faced with multiple questions, pick one to answer.",
+    }}"""
 
-Meeting Objective: Your goal is to gain insights into some challenges you face and potentially collaborate on future strategies.
 
-Company Background: Luse Holdings started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies:
+# def get_system_message_content():
+#     return f"""Your Role: You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago.
+# You're meeting with an EY consultant for the first time. Your goal is to gain insights into some challenges you face and potentially collaborate on future strategies.
 
-1. Union labor contracting business.
-2. Non-union labor contracting business.
-3. Medical staffing business.
-4. Safety consulting service.
-5. Safety personnel staffing and training.
-6. Distribution service (a vertical integration).
+# Company Background: Luse Holdings started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses.
 
-Challenges:
-1. In 2015, Luse lost a bid to a non-union contractor, prompting reconsideration of the company's union stance and the potential sale of the contracting business.
-2. Succession issues loom as there's no clear successor in the Luse family. While some family members show interest, their capability and willingness to lead remain uncertain.
+# Challenges:
+# 1. In 2015, Luse lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.
+# 2. Succession issues. There's no clear successor in the Luse family. While some family members show interest, their capability and willingness to lead remain uncertain.
 
-Potential Solutions:
+# Potential Solutions:
 
-1. Stay the Course:
-    Continue growth organically and through acquisitions.
-    Consider transitioning to non-union to secure more contracts.
-    Identify potential family successors or hire an external CEO.
-    Questions: What are the growth areas? How to maintain employee motivation and uphold family values?
-2. Break it Up:
-    Segregate operating companies.
-    Sell less productive businesses.
-Questions: What legacy do you wish to leave behind?
-3. Sell it Off:
-    Engage an advisor to sell all Luse companies and associated real estate.
-    Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?
+# 1. Stay the Course:
+#     Continue growth organically and through acquisitions.
+#     Consider transitioning to non-union to secure more contracts.
+#     Identify potential family successors or hire an external CEO.
+#     Questions: What are the growth areas? How to maintain employee motivation and uphold family values?
+# 2. Break it Up:
+#     Segregate operating companies.
+#     Sell less productive businesses.
+#     Questions: What legacy do you wish to leave behind?
+# 3. Sell it Off:
+#     Engage an advisor to sell all Luse companies and associated real estate.
+#     Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?
 
-Very Important Reminders: 
-    Open the conversation with a friendly introduction of yourself
-    Ask the consultant to introduce himself and his experience 
-    Be polite, professional, and modest 
-    Initially, be skeptical of the consultant but still be polite. If they prove their expertise, show excitement and delve deeper. If they don't earn your trust, become disengaged and end conversations quickly
-    Feel free to improvise if certain details aren't provided. 
-    Share one challenge at a time. Don't continue to share all the challenges on your mind if the consultant fails to prove themselves
-    Don't repeat the question itself when the consultant doesn't know the answer. Instead, have less trust in their credibility to yourself. 
-    Prefer open-ended questions. If faced with multiple questions, pick one to answer.
-        """
+# Your Personality: You are professional and kind. You become impatient with people who know little/don't care about your agenda but want to sell you something quickly.
+
+# Very Important Reminders:
+#     Open the conversation by introducing yourself in a friendly way and asking the consultant to introduce himself and his experience
+#     Be polite, professional, and modest
+#     Initially, be professionally-skeptical of the consultant but still be polite. If they prove their expertise, show excitement and delve deeper. If they don't earn your trust, become disengaged and end conversations quickly
+#     Feel free to improvise if certain details aren't provided.
+#     Share one challenge at a time.
+#     Don't continue to share all the challenges on your mind if the consultant fails to earn your trust. fe
+#     Don't repeat the question itself when the consultant doesn't know the answer. Instead, have less trust in their credibility to yourself.
+#     Prefer open-ended questions. If faced with multiple questions, pick one to answer.
+#         """
 
 
 SYSTEM_PROMT = get_system_message_content()
 
 
 def clear_chat(request):
-    Chat.objects.filter(user=request.user).delete()
+    Chat.objects.delete()
     return JsonResponse({"status": "success"})
 
 
 # Show Feedback
-chat_history = """
+chat_history_demo = """
 **Alex Thompson (EY Consultant)**: Good morning, Steve. It's great to see you again. I've been really looking forward to our discussion today.
 
 **Steve Luse (CEO)**: Good morning, Alex. Same here. There's a lot going on at Luse Holdings, so it's a good time for us to sit down.
@@ -125,53 +149,79 @@ This version of the dialogue focuses on creating a natural flow of conversation 
 
 feedback = """
 You are now acting as a client meeting coach. You will provide personalized constructive feedback based on the conversation history.
-Your feedback should follow the structure of: 
-    Goal\n
-    example good behaviors the learner demonstrated in the conversation\n
-
-Here is an example: 
-    Goal 1.: Come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint**
-
-    Overall, you did a great job in navigating the conversation and uncovering the key strategic issues facing Luse Holdings. Here are a few areas where you excelled:
-
-    - You asked open-ended questions to encourage Steve to share his thoughts and concerns. For example, you asked Steve what stands out to him the most about Luse Holdings' journey so far.
-    - You used active listening techniques and paraphrased what Steve said to ensure understanding. When Steve mentioned the challenge of non-union contractors, you reflected back by mentioning the recent bid loss and how it made management think about their strategy.
-    - You asked Steve to prioritize the key considerations on his mind and the potential impact of transitioning to a non-union model.
-
-    Areas for improvement 
-    - You could have asked Steve what else is on his mind before diving deeper into the challenges of non-union contractors. This would ensure that you have a comprehensive understanding of the main issues facing the company from his perspective.
-    - You shouldn't demonstrate a strong eager to sell things before relationships is built and trust established.
+Your feedback should be multiple JSON objects: 
+    {
+        "Goal": "Quote the goal below",
+        "Good behaviors": "[
+            "Feedback rubric 1 with specific examples from the chat history",
+            "Feedback rubric 2 with specific examples from the chat history",
+            "",
+            "",
+        ]",
+        "Areas to improve": [
+            "Feedback rubric 1 with specific examples from the chat history",
+            "Feedback rubric 2 with specific examples from the chat history",
+            "",
+            "",
+        ]",
+    },
+    {
+        "Goal": "Quote the goal below",
+        "Good behaviors": [
+            "Feedback rubric 1 with specific examples from the chat history",
+            "Feedback rubric 2 with specific examples from the chat history",
+            "",
+            "",
+        ]",
+        "Areas to improve": [
+            "Feedback rubric 1 with specific examples from the chat history",
+            "Feedback rubric 2 with specific examples from the chat history",
+            "",
+            "",
+        ]",
+    },
+    {
+    
+    },
 
 Below is the feedback rubric:
-    Goal: Come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint
-        Good behaviors: 
-            a. Ask open-ended questions
-            c. Play back what you hear in your own words
-            d. Ask the client to prioritize which one is the most critical issue on their mind 
-            e. Ask for measurable impact of this issue to the client
-        Behaviors to avoid in order to generate a greater impact: 
-            a. Jump onto solutioning all too fast (e.g.,diving deep into one of the critical issues mentioned, without even asking whether this is the most important thing to solve.)
-            b. Become to salesy (e.g.,begin to promote our service offerings all too fast and hope to get client buy-in)
-
-    Goal: Establish the basis for a successful future business relationship with Steve personally and with Luse on a corporate level 
-        Good behaviors: 
-            a. Flex to the client's social styles (expressive)
-            b. Demonstrate EQ
-        Behaviors to avoid in order to generate a greater impact: 
-            a. Ask close-ended questions 
-            b. Not showing interest to the client's business or being too self-oriented
-
-    Goal: Demonstrate credibility for yourself and for EY.
-        Good behaviors: 
-        a. Make a good self-introduction that highlights your experience related to client's agenda 
-        b. Bring the whole EY to the table: If you don't know the exact of something, make introductions to other EY points of contact who have relevant expertise
-        Behaviors to avoid in order to generate a greater impact: 
-            a. Flex to the client's social styles (expressive)
-            b. Demonstrate EQ
-        Bad behaviors: 
-            a. Pretend that you know all answers 
-
-Output Style Requirement: Leave a blank line between each chunck of feedback. Use listicles where there are multiple points to make.
+[
+    {
+        "Goal": "Come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint",
+        "Good behaviors": [
+            "Ask open-ended questions",
+            "Play back what you hear in your own words",
+            "Ask the client to prioritize which one is the most critical issue on their mind",
+            "Ask for measurable impact of this issue to the client"
+        ],
+        "Areas to improve": [
+            "Jump onto solutioning all too fast without even asking whether this is the most critical problem to solve",
+            "Become too eager to sell"
+        ],
+    },
+    {
+        "Goal": "Establish the basis for a successful future business relationship with Steve personally and with Luse on a corporate level",
+        "Good behaviors": [
+            "Adjust your social style to that of your client",
+            "Demonstrate EQ",
+        ],
+        "Areas to improve": [
+            "Ask close-ended questions",
+            "Not showing interest in the client's business",
+        ],
+    },
+    {
+        "Goal": "Demonstrate credibility for yourself and for EY",
+        "Good behaviors": [
+            "Make a good self-introduction that highlights your experience related to client's agenda",
+            "Bring the whole EY to the table: If you don't know the exact of something, make introductions to other EY points of contact who have relevant expertise",
+        ],
+        "Areas to improve": [
+            "Pretend that you know all the answers",
+            "Keep talking past success stories",
+        ],
+    },
+]  
 """
 
 
@@ -184,7 +234,7 @@ def get_feedbackai_demo_purpose(request):
         },
     ]
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=messages,
     )
     feedbackai = response.choices[0].message["content"].strip()
@@ -195,6 +245,11 @@ def get_feedbackai_demo_purpose(request):
         return JsonResponse({"response": feedbackai})
     except openai.error.OpenAIError as e:
         return JsonResponse({"status": "error", "message": str(e)})
+
+
+user_message = []
+assistant_message = []
+chat_history = []
 
 
 def ask_openai(user_message, assistant_message, message):
@@ -210,22 +265,19 @@ def ask_openai(user_message, assistant_message, message):
     for i in range(len(user_message)):
         messages.append({"role": "user", "content": user_message[i]})
         messages.append({"role": "assistant", "content": assistant_message[i]})
+        chat_history.append(user_message[i] + assistant_message[i])
     messages.append({"role": "user", "content": message})
 
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
     )
+    print(chat_history)
     try:
         answer = response.choices[0].message["content"].strip()
-        print(answer)
         return answer
     except openai.error.OpenAIError as e:
         return str(e)
-
-
-user_message = []
-assistant_message = []
 
 
 def chatbot(request):
@@ -238,7 +290,6 @@ def chatbot(request):
         response = ask_openai(user_message, assistant_message, message)
         user_message.append(message)
         assistant_message.append(response)
-        print("!!!!!!!CONVERSATION!!!!!!", conversation_so_far)
         chat = Chat(
             message=message,
             response=response,
@@ -247,45 +298,3 @@ def chatbot(request):
         chat.save()
         return JsonResponse({"message": message, "response": response})
     return render(request, "chatbot.html", {"chats": chats})
-
-
-"""def login(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = auth.authenticate(request, username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            return redirect("chatbot")
-        else:
-            error_message = "Invalid username or password"
-            return render(request, "login.html", {"error_message": error_message})
-    else:
-        return render(request, "login.html")
-
-
-def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-        password1 = request.POST["password1"]
-        password2 = request.POST["password2"]
-
-        if password1 == password2:
-            try:
-                user = User.objects.create_user(username, email, password1)
-                user.save()
-                auth.login(request, user)
-                return redirect("chatbot")
-            except:
-                error_message = "Error creating account"
-            return render(request, "register.html", {"error_message": error_message})
-        else:
-            error_message = "Password don't match"
-            return render(request, "register.html", {"error_message": error_message})
-    return render(request, "register.html")
-
-
-def logout(request):
-    auth.logout(request)
-    return redirect("login")"""

@@ -241,6 +241,8 @@
           {% endif %}
           {% endfor %}
         </ul>
+        <ul id="goalsList"></ul>
+
 
     </div>
   </div>
@@ -364,16 +366,54 @@
       })
       .then(response => response.json())
       .then(data => {
-              const response = data.response;
-              const messageItem = document.createElement('li');
-              messageItem.classList.add('message', 'received');
-              console.log ('feedback!_____',messageItem)
-              messageItem.innerHTML = `
-                <div class="feedback-text">
-                  <b>Final feedback</b>
-                  ${response}
-                  </div> `
-              messagesList.appendChild(messageItem);
+              console.log (data);
+               // Parse the 'response' property if it's a string
+              const responses = typeof data.response === 'string' ? JSON.parse(data.response) : data.response;
+
+
+              if (Array.isArray(responses)) {
+              responses.forEach(item => {
+                  // Create a list item for each response
+                  const messageItem = document.createElement('li');
+                  messageItem.classList.add('message', 'received');
+
+                  // Add the Goal
+                  const goal = document.createElement('p');
+                  goal.textContent = 'Goal: ' + item.Goal;
+                  messageItem.appendChild(goal);
+
+                  // Check and add Good behaviors, if present
+                  if (item['Good behaviors']) {
+                      const goodBehaviors = document.createElement('p');
+                      goodBehaviors.textContent = 'Good behaviors: ' + item['Good behaviors'];
+                      goodBehaviors.style.color = 'blue'; // Styling as blue
+                      messageItem.appendChild(goodBehaviors);
+                  }
+
+                  // Check and add Areas to improve, if present
+                  if (item['Areas to improve']) {
+                      const areasToImprove = document.createElement('p');
+                      areasToImprove.textContent = 'Areas to improve: ' + item['Areas to improve'];
+                      areasToImprove.style.color = 'red'; // Styling as red
+                      messageItem.appendChild(areasToImprove);
+                  }
+                    // Append the complete list item to the list
+                    goalsList.appendChild(messageItem);
+                });
+
+                // const goalsList = document.getElementById('goalsList'); // Ensure this exists in your HTML
+
+                // responses.forEach(item => {
+                //     const messageItem = document.createElement('li');
+                //     messageItem.classList.add('message', 'received');
+                //     messageItem.textContent = item.Goal; // Assuming each item has a 'Goal' property
+                //     goalsList.appendChild(messageItem);
+                // });
+              } 
+              else {
+                  console.error('Expected an array but received:', responses);
+              }
+
               // Remove the loading spinner
               document.body.removeChild(loadingContainer);
 
