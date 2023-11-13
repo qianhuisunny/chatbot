@@ -163,7 +163,7 @@
 <div class="container-fluid">
   <div class="row main-container">
     <div class="scenario-container col-md-5">
-      <h1>Scenario</h1>
+      <h1>Client Meeting Role Play</h1>
       <div class="learning-objectives">
         <b>The Success of the Meeting could be defined as:</b>
           <li>to come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint;</li>
@@ -175,6 +175,12 @@
         <button class="get-feedback-demo-button">Get Feedback Demo</button>
         <button class="get-feedback-button">Get Feedback</button>
       </div>
+      <div class="link-container">
+        <a href=" "></a>
+        <a href="https://docs.google.com/document/d/1EhNFagDADcG2TH8OQ_kk5It5HWYMbi7KJ9zGSwENdkc/edit?usp=sharing">See the Chat History Demo</a>
+        <a href=" "></a>
+      </div>
+
       <div class="learner-context">
         <h4>About the Family-Owned Business: Luse Holdings Inc.</h4>
         <p>Your Partner onboarded you to this new client Luse Holdings, a Chicago-based family-owned company that has had over 100 years of history. Starting as a roofing contractor, Luse Holdings now has six operating companies: 3 contracting businesses which include a union labor contracting business, non-union labor contracting business, medical staffing business, 
@@ -344,7 +350,77 @@
   });
 </script>
 
-<!---This is to end the meeting and show feedback-->
+<!---This is to end the meeting and show feedback for a real dialogue-->
+<script>
+  document.querySelector('.get-feedback-button').addEventListener('click', function() {
+      console.log("button clicked")
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      // Create and show the loading spinner
+      const loadingContainer = document.createElement('div');
+      loadingContainer.classList.add('loading-container');
+      const spinner = document.createElement('div');
+      spinner.classList.add('spinner');
+      loadingContainer.appendChild(spinner);
+      document.body.appendChild(loadingContainer);
+
+      fetch('/get_feedbackai/', {
+          method: 'POST',
+          headers: {
+              'X-Requested-With': 'XMLHttpRequest',  // To indicate AJAX request
+              'X-CSRFToken': csrfToken
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+              console.log (data.response);
+
+              const responses = typeof data.response === 'string' ? JSON.parse(data.response) : data.response;
+              if (data && Array.isArray(responses)) {
+              responses.forEach(item => {
+                  // Create a list item for each response
+                  const messageItem = document.createElement('li');
+                  messageItem.classList.add('message', 'received');
+
+                  // Add the Goal
+                  const goal = document.createElement('p');
+                  goal.textContent = 'Goal: ' + item.Goal;
+                  messageItem.appendChild(goal);
+
+                  // Check and add Good behaviors, if present
+                  if (item['Good behaviors']) {
+                      const goodBehaviors = document.createElement('p');
+                      goodBehaviors.textContent = 'Good behaviors: ' + item['Good behaviors'];
+                      goodBehaviors.style.color = 'blue'; // Styling as blue
+                      messageItem.appendChild(goodBehaviors);
+                  }
+
+                  // Check and add Areas to improve, if present
+                  if (item['Areas to improve']) {
+                      const areasToImprove = document.createElement('p');
+                      areasToImprove.textContent = 'Areas to improve: ' + item['Areas to improve'];
+                      areasToImprove.style.color = 'red'; // Styling as red
+                      messageItem.appendChild(areasToImprove);
+                  }
+                    // Append the complete list item to the list
+                    goalsList.appendChild(messageItem);
+                });
+
+              } 
+              else {
+                  console.error('Expected an array but received:', responses);
+              }
+
+              // Remove the loading spinner
+              document.body.removeChild(loadingContainer);
+
+          } 
+      );
+      
+  });
+</script>
+
+<!---This is to end the meeting and show feedback for a demo dialogue-->
 <script>
   document.querySelector('.get-feedback-demo-button').addEventListener('click', function() {
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -401,14 +477,6 @@
                     goalsList.appendChild(messageItem);
                 });
 
-                // const goalsList = document.getElementById('goalsList'); // Ensure this exists in your HTML
-
-                // responses.forEach(item => {
-                //     const messageItem = document.createElement('li');
-                //     messageItem.classList.add('message', 'received');
-                //     messageItem.textContent = item.Goal; // Assuming each item has a 'Goal' property
-                //     goalsList.appendChild(messageItem);
-                // });
               } 
               else {
                   console.error('Expected an array but received:', responses);
@@ -421,7 +489,6 @@
       );
       
   });
-  
 </script>
 
 

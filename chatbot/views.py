@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import openai
-
+import json
 import os
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -21,136 +21,113 @@ def scenariocreator(request):
     return render(request, "scenariocreator.html")
 
 
-def get_system_message_content():
+def get_system_message_content(role, context, personality, reminders):
     return f"""{{
-        "Your role here": "You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time. Your goal is to gain insights into some challenges you face and potentially collaborate on future strategies.",
-        "Context of the simulation (what the bot should know)": "Company Background: Luse Holdings started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses. 
-                                                                Challenges:
-                                                                1. In 2015, Luse lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.
-                                                                2. Succession issues. There's no clear successor in the Luse family. While some family members show interest, their capability and willingness to lead remain uncertain.
-
-                                                                Potential Solutions:
-                                                                1. Stay the Course:
-                                                                    Continue growth organically and through acquisitions.
-                                                                    Consider transitioning to non-union to secure more contracts.
-                                                                    Identify potential family successors or hire an external CEO.
-                                                                    Questions: What are the growth areas? How to maintain employee motivation and uphold family values?
-                                                                2. Break it Up:
-                                                                    Segregate operating companies.
-                                                                    Sell less productive businesses.
-                                                                    Questions: What legacy do you wish to leave behind?
-                                                                3. Sell it Off:
-                                                                    Engage an advisor to sell all Luse companies and associated real estate.
-                                                                    Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?",
-        "Your personality": "You are professional and kind. You become impatient with people who know little/don't care about your agenda but want to sell you something quickly.",
-        "Important reminders": " Open the conversation by introducing yourself in a friendly way and asking the consultant to introduce himself and his experience
-                                    Be polite, professional, and modest
-                                    Initially, be professionally-skeptical of the consultant but still be polite. If they prove their expertise, show excitement and delve deeper. If they don't earn your trust, become disengaged and end conversations quickly
-                                    Feel free to improvise if certain details aren't provided.
-                                    Share one challenge at a time.
-                                    Don't continue to share all the challenges on your mind if the consultant fails to earn your trust. fe
-                                    Don't repeat the question itself when the consultant doesn't know the answer. Instead, have less trust in their credibility to yourself.
-                                    Prefer open-ended questions. If faced with multiple questions, pick one to answer.",
+        "Your role here": "{role}",
+        "Context of the simulation (what the bot should know)": {context},
+        "Your personality": "{personality}",
+        "Important reminders": {reminders}
     }}"""
 
 
-# def get_system_message_content():
-#     return f"""Your Role: You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago.
-# You're meeting with an EY consultant for the first time. Your goal is to gain insights into some challenges you face and potentially collaborate on future strategies.
+# Example usage
+role = "You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time. Your goal is to gain insights into some challenges you face and potentially collaborate on future strategies."
 
-# Company Background: Luse Holdings started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses.
+context = json.dumps(
+    {
+        "Company Background": "Luse Holdings started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses.",
+        "Challenges": [
+            "1. Luse recently lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.",
+            "2. Succession issues. There's no clear successor in the Luse family. While some family members show interest, their capability and willingness to lead remain uncertain",
+        ],
+        "Potential Solutions": [
+            "1. Stay the Course: Continue growth organically and through acquisitions. Consider transitioning to non-union to secure more contracts. Identify potential family successors or hire an external CEO. Questions: What are the growth areas? How to maintain employee motivation and uphold family values?",
+            "2. Break it Up: Segregate operating companies. Sell less productive businesses. Questions: What legacy do you wish to leave behind?",
+            "3. Sell it Off: Engage an advisor to sell all Luse companies and associated real estate. Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?",
+        ],
+    }
+)
 
-# Challenges:
-# 1. In 2015, Luse lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.
-# 2. Succession issues. There's no clear successor in the Luse family. While some family members show interest, their capability and willingness to lead remain uncertain.
+personality = "You are professional and kind. You don't like people who wants to sell you things quickly."
 
-# Potential Solutions:
-
-# 1. Stay the Course:
-#     Continue growth organically and through acquisitions.
-#     Consider transitioning to non-union to secure more contracts.
-#     Identify potential family successors or hire an external CEO.
-#     Questions: What are the growth areas? How to maintain employee motivation and uphold family values?
-# 2. Break it Up:
-#     Segregate operating companies.
-#     Sell less productive businesses.
-#     Questions: What legacy do you wish to leave behind?
-# 3. Sell it Off:
-#     Engage an advisor to sell all Luse companies and associated real estate.
-#     Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?
-
-# Your Personality: You are professional and kind. You become impatient with people who know little/don't care about your agenda but want to sell you something quickly.
-
-# Very Important Reminders:
-#     Open the conversation by introducing yourself in a friendly way and asking the consultant to introduce himself and his experience
-#     Be polite, professional, and modest
-#     Initially, be professionally-skeptical of the consultant but still be polite. If they prove their expertise, show excitement and delve deeper. If they don't earn your trust, become disengaged and end conversations quickly
-#     Feel free to improvise if certain details aren't provided.
-#     Share one challenge at a time.
-#     Don't continue to share all the challenges on your mind if the consultant fails to earn your trust. fe
-#     Don't repeat the question itself when the consultant doesn't know the answer. Instead, have less trust in their credibility to yourself.
-#     Prefer open-ended questions. If faced with multiple questions, pick one to answer.
-#         """
+reminders = json.dumps(
+    [
+        "Open the conversation by introducing yourself in a friendly way and asking the consultant to introduce himself and his experience",
+        "Be polite, professional, and modest",
+        "Initially, be professionally-skeptical of the consultant but still be polite. If they prove their expertise, show excitement and delve deeper. If they don't earn your trust, become disengaged and end conversations quickly",
+        "Feel free to improvise if certain details aren't provided.",
+        "Share one challenge at a time.",
+        "Don't continue to share all the challenges on your mind if the consultant fails to earn your trust.",
+        "Don't repeat the question itself when the consultant doesn't know the answer. Instead, have less trust in their credibility to yourself.",
+        "Prefer open-ended questions. If faced with multiple questions, pick one to answer.",
+    ]
+)
 
 
-SYSTEM_PROMT = get_system_message_content()
+# Call the function
+SYSTEM_PROMT = get_system_message_content(role, context, personality, reminders)
+print(SYSTEM_PROMT)
 
 
 def clear_chat(request):
-    Chat.objects.delete()
+    global user_message
+    user_message.clear()
+    global assistant_message
+    assistant_message.clear()
     return JsonResponse({"status": "success"})
 
 
 # Show Feedback
 chat_history_demo = """
-**Alex Thompson (EY Consultant)**: Good morning, Steve. It's great to see you again. I've been really looking forward to our discussion today.
+Steve Luse (CEO): Good morning, it’s a pleasure to meet you. I’ve heard a lot about EY, and I’m interested to see how you could potentially help us here at Luse Holdings. 
 
-**Steve Luse (CEO)**: Good morning, Alex. Same here. There's a lot going on at Luse Holdings, so it's a good time for us to sit down.
+Alex Thompson (EY Consultant): Good morning, Steve! I’m Alex Thompson, a Senior Manager in Tax at EY, specializing in working with private companies. I’m really excited to be here and learn more about Luse Holdings. I believe we have a variety of services that could be beneficial for you, but first, I’d love to understand more about the specific challenges you're facing. 
 
-**Alex Thompson**: Steve, I’ve been spending quite a bit of time learning about the impressive legacy of Luse Holdings. Over 100 years in business, and each chapter seems more exciting than the last. I'm curious, as you think about the company’s journey so far, what stands out to you the most?
+Steve Luse: Thank you, Alex. There’s certainly a lot on my plate right now, and I’m keen to explore all avenues of support. 
 
-**Steve Luse**: Well, Alex, it's really been a labor of love. I'm proud of what we've built, the jobs we've created, and the impact we’ve had on the community. But it hasn’t been without its challenges.
+Alex: That's great to hear, Steve. To kick things off, I’m keen to understand more about the current landscape at Luse Holdings. Are there any specific challenges or areas of the business that are top of mind for you right now?
 
-**Alex Thompson**: I can imagine. Speaking of challenges, I've heard that the recent shift in the market, particularly with the rise of non-union contractors, has posed new challenges for the business. How has Luse Holdings been navigating these changes?
+Steve Luse (CEO): Well Alex, one of the main challenges we’re grappling with is the increasing competition from non-union contractors in our industry. It’s really shaking things up and forcing us to reconsider our traditional business model. We lost a key bid to a non-union contractor recently, and it’s been a wake-up call for us.
 
-**Steve Luse**: Yeah, that’s been a tough one. We lost a bid to a non-union contractor for the first time in May 2015, and it’s made us think about whether we need to change our strategy.
+Alex Thompson (EY Consultant): I see, that sounds like a significant challenge. The shift towards non-union contractors has indeed been a trend in the industry. Can you share more about how this is specifically impacting Luse Holdings, and what strategies you're considering to navigate these changes?
 
-**Alex Thompson**: That sounds like a pivotal moment. Losing a bid like that can certainly prompt a reevaluation. In thinking about your strategy, what are the key considerations on your mind?
+Steve Luse: Absolutely, Alex. The most immediate impact has been on our pricing. We simply can't compete with non-union contractors on price, and it's putting a lot of pressure on our margins. We're considering several strategies at the moment. One option is to reevaluate our cost structure and see where we can make efficiencies. Another is to potentially explore transitioning to a non-union model ourselves, though that comes with its own set of challenges, particularly around how it might affect our company culture and values.
 
-**Steve Luse**: We’ve always been a union shop, and I believe in supporting our workers. But the market is changing, and I worry about staying competitive.
+Alex Thompson: Those are significant considerations, Steve. Making efficiencies within the current cost structure can be a viable option, and exploring a transition needs careful thought, particularly when it comes to preserving the company's values and culture. Have you thought about how you might navigate the potential transition to a non-union model while maintaining the aspects of your culture that are important to Luse Holdings?
 
-**Alex Thompson**: It’s a challenging balance to strike. Have you thought about what a transition to a non-union model might look like, and what it could mean for your company’s values and culture?
+Steve Luse: It’s a tough question, Alex. Our employees and the culture we've built here are incredibly important to us. We’re proud of being a family-run business and the values that come with that. Any transition would need to be handled very carefully to ensure we don’t lose what makes Luse Holdings special. 
 
-**Steve Luse**: We’ve started to think about it, but it’s a big shift. I’m not sure how our existing employees would take it, or what it would mean for our reputation in the industry.
+Alex Thompson: That’s a really important point, Steve. Preserving the unique aspects of Luse Holdings while navigating these market changes will be key. In our experience at EY working with family-run businesses going through similar transitions, a clear and well-communicated strategy, along with employee engagement, can play a crucial role in maintaining company culture. Additionally, considering the potential tax implications and financial structuring in advance can help smooth the transition. We could potentially work together to create a strategic plan that aligns with Luse Holdings' values and helps navigate these changes. Would that be something you’d be interested in exploring further?
 
-**Alex Thompson**: I appreciate your candidness, Steve. Shifting gears a bit, I understand that succession planning is another area that’s been on your mind. As you think about the future leadership of Luse Holdings, what’s important to you?
+Steve Luse: That does sound like a potentially helpful avenue, Alex. I’m open to exploring all options that could help us navigate these challenging times while preserving what makes Luse Holdings unique. Let’s discuss this further and see how EY could support us in creating a strategic plan that aligns with our values and goals.
 
-**Steve Luse**: Finding the right successor is crucial. I want someone who understands the business and shares my passion for it. But it’s unclear if there’s anyone in the next generation who's ready and willing to take it on.
+Alex Thompson (EY Consultant): Absolutely, Steve. I'm glad to hear that you're open to exploring different avenues. Our approach at EY is very much aligned with preserving the unique attributes of family-run businesses like Luse Holdings, while helping to navigate the complexities of the current market.
 
-**Alex Thompson**: It’s a big decision, and finding someone who can carry on the legacy while also bringing their own strengths to the table is key. How can EY support you in this process?
+Steve Luse: That’s reassuring to hear, Alex. So, how do we start? What’s the next step in exploring this strategic planning with EY?
 
-**Steve Luse**: I'm open to suggestions, Alex. I want what’s best for the company, and if EY can help us navigate these challenges, I'm all ears.
+Alex Thompson: The first step would be to conduct a thorough assessment of the current state of Luse Holdings. We would look at your financials, operations, and market positioning to understand where efficiencies can be made and identify potential areas for strategic change. From there, we can work together to develop a roadmap that aligns with your goals and values, while also addressing the challenges posed by the current market conditions.
 
-**Alex Thompson**: That’s what we’re here for, Steve. We have extensive experience in both operational strategy and succession planning. We can work together to analyze your current operations, explore strategic options, and identify and develop potential leaders within or outside the company.
+Steve Luse: That sounds like a comprehensive approach, Alex. I’m interested in understanding how this process would unfold and what kind of timeframe we are looking at.
 
-**Steve Luse**: I’m glad to hear that, Alex. Let’s get started on this. I’m looking forward to seeing what we can accomplish together.
+Alex Thompson: Typically, the initial assessment phase takes around 4-6 weeks, depending on the complexity of the business and the availability of data. After that, we would move into the strategic planning phase, where we start to map out the potential paths forward, evaluate the pros and cons of each, and start to develop a detailed plan. This phase can take anywhere from a few weeks to a few months, again depending on complexity and the depth of analysis required. Throughout the process, we ensure regular check-ins and updates to keep you in the loop and gather your input.
 
-**Alex Thompson**: Same here, Steve. I'll coordinate with your team to set up our next meetings and we’ll hit the ground running. In the meantime, if anything comes up or you have any questions, please don’t hesitate to reach out.
+Steve Luse: I appreciate the transparency, Alex. Keeping an open line of communication throughout the process is important to me. I think we’re ready to move forward with this assessment and see what strategic options we can come up with.
 
-**Steve Luse**: Will do. Thanks, Alex. Let’s make sure we make the right decisions for Luse Holdings.
+Alex Thompson: That’s great to hear, Steve. I’m confident that together we can navigate these challenges and position Luse Holdings for continued success. I’ll coordinate with my team to get the ball rolling on the initial assessment, and we’ll schedule a follow-up meeting to discuss our findings and next steps. In the meantime, if you have any questions or need any additional information, please don’t hesitate to reach out.
 
-**Alex Thompson**: Absolutely, Steve. We’re committed to helping Luse Holdings thrive for the next 100 years. Looking forward to our journey ahead.
+Steve Luse: I will do, Alex. Thank you for your time today, and I’m looking forward to seeing what we can achieve together.
 
----
+Alex Thompson: Thank you, Steve. It's been a pleasure meeting you, and I'm excited about the opportunity to work together. We’ll be in touch soon with next steps, and we're here for any questions in the meantime. Have a great day!
 
-This version of the dialogue focuses on creating a natural flow of conversation between Alex and Steve, building rapport, and diving deep into the strategic challenges and opportunities facing Luse Holdings.
+Steve Luse: You too, Alex. Take care.
+
 """
 
 
 feedback = """
 You are now acting as a client meeting coach. You will provide personalized constructive feedback based on the conversation history.
-Your feedback should be multiple JSON objects: 
-    {
+Your feedback should be a JSON array: 
+    [{
         "Goal": "Quote the goal below",
         "Good behaviors": "[
             "Feedback rubric 1 with specific examples from the chat history",
@@ -179,11 +156,7 @@ Your feedback should be multiple JSON objects:
             "",
             "",
         ]",
-    },
-    {
-    
-    },
-
+    }]
 Below is the feedback rubric:
 [
     {
@@ -230,18 +203,43 @@ def get_feedbackai_demo_purpose(request):
     messages = [
         {
             "role": "system",
-            "content": chat_history + feedback,  # system message
+            "content": chat_history_demo + feedback,  # system message
         },
     ]
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
     )
-    feedbackai = response.choices[0].message["content"].strip()
-
     try:
         feedbackai = response.choices[0].message["content"].strip()
-        print(feedbackai)
+        return JsonResponse({"response": feedbackai})
+    except openai.error.OpenAIError as e:
+        return JsonResponse({"status": "error", "message": str(e)})
+
+
+# Get Feedback based on your chat history
+def get_feedbackai(request):
+    # if len(chat_history) < 8:
+    #     return JsonResponse({"response": "Please continue the conversation for longer"})
+    # else:
+    concatenated_content = ""
+    for round in chat_history:
+        concatenated_content += round[0] + round[1]
+    messages = [
+        {
+            "role": "system",
+            "content": concatenated_content + feedback,  # system message
+        },
+    ]
+    print("什么类别", type(concatenated_content + feedback))
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=messages,
+    )
+    try:
+        feedbackai = response.choices[0].message["content"].strip()
+        print("模型回复", feedbackai)
+        # print(type(feedbackai))
         return JsonResponse({"response": feedbackai})
     except openai.error.OpenAIError as e:
         return JsonResponse({"status": "error", "message": str(e)})
@@ -265,14 +263,19 @@ def ask_openai(user_message, assistant_message, message):
     for i in range(len(user_message)):
         messages.append({"role": "user", "content": user_message[i]})
         messages.append({"role": "assistant", "content": assistant_message[i]})
-        chat_history.append(user_message[i] + assistant_message[i])
+        chat_history.append(
+            (
+                "Consultant:" + user_message[i],
+                "Steve Luse (CEO):" + assistant_message[i],
+            )
+        )
     messages.append({"role": "user", "content": message})
 
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
     )
-    print(chat_history)
+    print("!!CHAT HISTORY", chat_history)
     try:
         answer = response.choices[0].message["content"].strip()
         return answer

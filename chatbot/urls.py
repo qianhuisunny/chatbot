@@ -10,7 +10,7 @@ urlpatterns = [
         name="get_feedbackai_demo_purpose",
     ),
     path("scenariocreator/", views.scenariocreator, name="scenariocreator"),
-    # path("login", views.login, name="login"),
+    path("get_feedbackai/", views.get_feedbackai, name="getfeedbackai"),
     # path("register", views.register, name="register"),
     # path("logout", views.logout, name="logout"),
 ]
