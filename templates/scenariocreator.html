@@ -10,41 +10,353 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
+<style>
+    .tab-content {
+        line-height: 1.6; /* Adjusts the spacing between lines */
+        margin-bottom: 20px; /* Adds space at the bottom of each section */
+    }
+
+    .tab-pane {
+        margin-bottom: 20px; /* Adds space at the bottom of each tab pane */
+    }
+
+    .form-control {
+        margin-bottom: 10px; /* Adds space below each input field */
+        width: 100%; /* or any specific width */
+        height: auto;
+    }
+    .form-high {
+        margin-bottom: 10px; /* Adds space below each input field */
+        width: 100%; /* or any specific width */
+        height: 150px;
+    }
+
+    h4, h5 {
+        margin-top: 20px; /* Adds space above each header */
+        margin-bottom: 10px; /* Adds space below each header */
+    }
+
+    .btn {
+        margin-top: 20px; /* Adds space above the button */
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <body>
     <!-- Multi-Step Form HTML -->
-    <div class="container mt-5">
-        <form id="multiStepForm">
-            <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link active" href="#step1" data-toggle="tab">Step 1</a></li>
-                <li class="nav-item"><a class="nav-link" href="#step2" data-toggle="tab">Step 2</a></li>
-                <!-- Add more tabs here if you have more steps -->
-            </ul>
+<div class="container">
+    <div class="row main-container">
+        <div class="chat-container col-md-5">
+            <form id="multiStepForm">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" href="#step1" data-toggle="tab">Learning Objectives</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step2" data-toggle="tab">Your Role Here</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step3" data-toggle="tab">Contextarea of the simulation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step4" data-toggle="tab">Your Personality</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step5" data-toggle="tab">Reminders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step5" data-toggle="tab">Learner dashboard</a></li>
+                    <!-- Add more tabs here if you have more steps -->
+                </ul>
 
-            <div class="tab-content">
-                <div class="tab-pane active" id="step1">
-                    <!-- Form fields for step 1 -->
-                    <h3>Step 1: Personal Details</h3>
-                    <input type="text" name="fname" class="form-control" placeholder="First Name"/>
-                    <input type="text" name="lname" class="form-control" placeholder="Last Name"/>
-                    <!-- ... other fields ... -->
-                    <button type="button" class="btn btn-primary next-step">Next</button>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="step1">
+                        <!-- Form fields for step 1 -->
+                        <h5>Learning Objective</h5>
+                        <input type="textarea" name="fname" class="form-control" placeholder="Come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint"/>
+                        <b>Good Behaviors:</b>
+                        <input type="textarea" name="fname" class="form-control" placeholder="Ask open-ended questions"/>
+                        <input type="textarea" name="lname" class="form-control" placeholder="Play back what you hear in your own words"/>
+                        <input type="textarea" name="lname" class="form-control" placeholder="Ask the client to prioritize which one is the most critical issue on their mind"/>
+                        <input type="textarea" name="lname" class="form-control" placeholder="Ask for measurable impact of this issue to the client"/>
+                        <b>Areas to Improve:</b>
+                        <input type="textarea" name="fname" class="form-control" placeholder="Jump onto solutioning all too fast without even asking whether this is the most critical problem to solve"/>
+                        <input type="textarea" name="lname" class="form-control" placeholder="Become too eager to sell"/>
+                        <input type="textarea" name="lname" class="form-control" placeholder=""/>
+                        <!-- ... other fields ... -->
+                        <div id="additionalForms"></div>
+                        <button type="button" class="btn btn-primary" onclick="addForm()">Add One More</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                    <div class="tab-pane" id="step2">
+                        <!-- Form fields for step 2 -->
+                        <h5>Describe the role of the AI Agent</h5>
+                        <input type="textareaarea" name="textarea" class="form-high" placeholder="You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time."/>
+                        <!-- ... other fields ... -->
+                        <button type="button" class="btn btn-secondary prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                    <!-- Add more steps here if needed -->
                 </div>
-                <div class="tab-pane" id="step2">
-                    <!-- Form fields for step 2 -->
-                    <h3>Step 2: Contact Information</h3>
-                    <input type="email" name="email" class="form-control" placeholder="Email"/>
-                    <input type="tel" name="phone" class="form-control" placeholder="Phone"/>
-                    <!-- ... other fields ... -->
-                    <button type="button" class="btn btn-secondary prev-step">Previous</button>
-                    <button type="button" class="btn btn-primary next-step">Next</button>
+            </form>
+        </div>
+        <div class="chat-container col-md-7">
+            <ul class="list-unstyled messages-list">
+                {% for chat in chats %}
+                {% if chat.user == request.user %}
+                <div class="card-body messages-box"></div>
+                <li class="message sent">
+                <div class="message-text">
+                    <div class="message-sender">
+                    <b>You-EY Consultant</b>
+                    </div>
+                    <div class="message-content">
+                    {{chat.message}}
+                    </div>
                 </div>
-                <!-- Add more steps here if needed -->
-            </div>
-        </form>
+                </li>
+    
+                <li class="message received">
+                <div class="message-text">
+                    <div class="message-sender">
+                    <b>Steve Luse-CEO of Luse Holdings</b>
+                    </div>
+                    <div class="message-content">
+                    {{chat.response}}
+                    </div>
+                </div>
+                </li>
+    
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <form class="message-form">
+                {%csrf_token%}
+                <div class="input-group">
+                  <input type="text" class="form-control message-input" placeholder="Type your message...">
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary btn-send">Send</button>
+                  </div>
+                </div>
+            </form>
+          <ul id="goalsList"></ul>
+      </div>
     </div>
+  </div>      
+  
+
+  
+  <script>
+    const messagesList = document.querySelector('.messages-list');
+    const messageForm = document.querySelector('.message-form');
+    const messageInput = document.querySelector('.message-input');
+  
+    messageForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+  
+      const message = messageInput.value.trim();
+      if (message.length === 0) {
+        return;
+      }
+  
+      const messageItem = document.createElement('li');
+      messageItem.classList.add('message', 'sent');
+      messageItem.innerHTML = `
+        <div class="message-text">
+          <div class="message-sender">
+            <b>You-EY Consultant</b>
+          </div>
+          <div class="message-content">
+            ${message}
+          </div>
+        </div>`;
+      messagesList.appendChild(messageItem);
+  
+      messageInput.value = '';
+  
+      fetch('/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+          'message': message
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          const response = data.response;
+          const messageItem = document.createElement('li');
+          messageItem.classList.add('message', 'received');
+          messageItem.innerHTML = `
+          <div class="message-text">
+            <div class="message-sender">
+              <b>Steve-CEO of Luse Holdings</b>
+            <div>
+            <div class="message-content">
+              ${response}
+            </div>
+          </div>
+          `;
+          messagesList.appendChild(messageItem);
+        });
+    });
+  
+  </script>
+  
+  <!--This is to clear previous Chat histories-->
+  <script>
+    document.querySelector('.begin-chat-button').addEventListener('click', function() {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        fetch('/clear_chat/', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // To indicate AJAX request
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Clear chat messages from the screen
+                document.querySelector('.messages-list').innerHTML = '';
+            } else {
+                console.error(data.message);
+            }
+        });
+    });
+  </script>
+  
+  <!---This is to end the meeting and show feedback for a real dialogue-->
+  <script>
+    document.querySelector('.get-feedback-button').addEventListener('click', function() {
+        console.log("button clicked")
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  
+        // Create and show the loading spinner
+        const loadingContainer = document.createElement('div');
+        loadingContainer.classList.add('loading-container');
+        const spinner = document.createElement('div');
+        spinner.classList.add('spinner');
+        loadingContainer.appendChild(spinner);
+        document.body.appendChild(loadingContainer);
+  
+        fetch('/get_feedbackai/', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // To indicate AJAX request
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+                console.log (data.response);
+  
+                const responses = typeof data.response === 'string' ? JSON.parse(data.response) : data.response;
+                if (data && Array.isArray(responses)) {
+                responses.forEach(item => {
+                    // Create a list item for each response
+                    const messageItem = document.createElement('li');
+                    messageItem.classList.add('message', 'received');
+  
+                    // Add the Goal
+                    const goal = document.createElement('p');
+                    goal.textContent = 'Goal: ' + item.Goal;
+                    messageItem.appendChild(goal);
+  
+                    // Check and add Good behaviors, if present
+                    if (item['Good behaviors']) {
+                        const goodBehaviors = document.createElement('p');
+                        goodBehaviors.textContent = 'Good behaviors: ' + item['Good behaviors'];
+                        goodBehaviors.style.color = 'blue'; // Styling as blue
+                        messageItem.appendChild(goodBehaviors);
+                    }
+  
+                    // Check and add Areas to improve, if present
+                    if (item['Areas to improve']) {
+                        const areasToImprove = document.createElement('p');
+                        areasToImprove.textContent = 'Areas to improve: ' + item['Areas to improve'];
+                        areasToImprove.style.color = 'red'; // Styling as red
+                        messageItem.appendChild(areasToImprove);
+                    }
+                      // Append the complete list item to the list
+                      goalsList.appendChild(messageItem);
+                  });
+  
+                } 
+                else {
+                    console.error('Expected an array but received:', responses);
+                }
+  
+                // Remove the loading spinner
+                document.body.removeChild(loadingContainer);
+  
+            } 
+        );
+        
+    });
+  </script>
+  
+  <!---This is to end the meeting and show feedback for a demo dialogue-->
+  <script>
+    document.querySelector('.get-feedback-demo-button').addEventListener('click', function() {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  
+        // Create and show the loading spinner
+        const loadingContainer = document.createElement('div');
+        loadingContainer.classList.add('loading-container');
+        const spinner = document.createElement('div');
+        spinner.classList.add('spinner');
+        loadingContainer.appendChild(spinner);
+        document.body.appendChild(loadingContainer);
+  
+        fetch('/get_feedbackai_demo_purpose/', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // To indicate AJAX request
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+                console.log (data);
+                 // Parse the 'response' property if it's a string
+                const responses = typeof data.response === 'string' ? JSON.parse(data.response) : data.response;
+  
+  
+                if (Array.isArray(responses)) {
+                responses.forEach(item => {
+                    // Create a list item for each response
+                    const messageItem = document.createElement('li');
+                    messageItem.classList.add('message', 'received');
+  
+                    // Add the Goal
+                    const goal = document.createElement('p');
+                    goal.textContent = 'Goal: ' + item.Goal;
+                    messageItem.appendChild(goal);
+  
+                    // Check and add Good behaviors, if present
+                    if (item['Good behaviors']) {
+                        const goodBehaviors = document.createElement('p');
+                        goodBehaviors.textContent = 'Good behaviors: ' + item['Good behaviors'];
+                        goodBehaviors.style.color = 'blue'; // Styling as blue
+                        messageItem.appendChild(goodBehaviors);
+                    }
+  
+                    // Check and add Areas to improve, if present
+                    if (item['Areas to improve']) {
+                        const areasToImprove = document.createElement('p');
+                        areasToImprove.textContent = 'Areas to improve: ' + item['Areas to improve'];
+                        areasToImprove.style.color = 'red'; // Styling as red
+                        messageItem.appendChild(areasToImprove);
+                    }
+                      // Append the complete list item to the list
+                      goalsList.appendChild(messageItem);
+                  });
+  
+                } 
+                else {
+                    console.error('Expected an array but received:', responses);
+                }
+  
+                // Remove the loading spinner
+                document.body.removeChild(loadingContainer);
+  
+            } 
+        );
+        
+    });
+  </script>
+          
 
     <!-- JavaScript for handling steps -->
     <script>
@@ -60,10 +372,29 @@
             });
         });
     </script>
+<script>
+    function addForm() {
+        var container = document.getElementById('additionalForms');
+    
+        // HTML content for the new form
+        var newFormHtml = `
+            <h4>Learning Objective</h4>
+            <input type="textarea" name="fname" class="form-control" placeholder="Come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint"/>
+            <h5>Good Behaviors:</h5>
+            <input type="textarea" name="fname" class="form-control" placeholder="Ask open-ended questions"/>
+            <input type="textarea" name="lname" class="form-control" placeholder="Play back what you hear in your own words"/>
+            <input type="textarea" name="lname" class="form-control" placeholder="Ask the client to prioritize which one is the most critical issue on their mind"/>
+            <input type="textarea" name="lname" class="form-control" placeholder="Ask for measurable impact of this issue to the client"/>
+        `;
+    
+        // Append the new form to the container
+        container.insertAdjacentHTML('beforeend', newFormHtml);
+    }
+</script>
+<div>
+    
 </body>
 </html>
-
-
 {% endblock %}
 
         

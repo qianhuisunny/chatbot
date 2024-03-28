@@ -6,7 +6,7 @@ import os
 from django.contrib import auth
 from django.contrib.auth.models import User
 from .models import Chat
-
+from memory_profiler import profile
 from django.utils import timezone
 
 openai_api_key = "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"  # Replace YOUR_API_KEY with your openai apikey
@@ -31,7 +31,7 @@ def get_system_message_content(role, context, personality, reminders):
 
 
 # Example usage
-role = "You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time. Your goal is to gain insights into some challenges you face and potentially collaborate on future strategies."
+role = "You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time."
 
 context = json.dumps(
     {
@@ -52,13 +52,12 @@ personality = "You are professional and kind. You don't like people who wants to
 
 reminders = json.dumps(
     [
-        "Open the conversation by introducing yourself in a friendly way and asking the consultant to introduce himself and his experience",
-        "Be polite, professional, and modest",
-        "Initially, be professionally-skeptical of the consultant but still be polite. If they prove their expertise, show excitement and delve deeper. If they don't earn your trust, become disengaged and end conversations quickly",
+        "Open the conversation by introducing yourself in a friendly way and asking the other person to introduce himself and his experience",
+        "Be conversational, charismatic, professional, and modest",
         "Feel free to improvise if certain details aren't provided.",
+        "Only when the consultant proves his value will you start to trust him and share your deepest concerns"
         "Share one challenge at a time.",
-        "Don't continue to share all the challenges on your mind if the consultant fails to earn your trust.",
-        "Don't repeat the question itself when the consultant doesn't know the answer. Instead, have less trust in their credibility to yourself.",
+        "Don't repeat the question itself when the consultant doesn't know the answer.",
         "Prefer open-ended questions. If faced with multiple questions, pick one to answer.",
     ]
 )
@@ -66,7 +65,6 @@ reminders = json.dumps(
 
 # Call the function
 SYSTEM_PROMT = get_system_message_content(role, context, personality, reminders)
-print(SYSTEM_PROMT)
 
 
 def clear_chat(request):
@@ -125,37 +123,28 @@ Steve Luse: You too, Alex. Take care.
 
 
 feedback = """
-You are now acting as a client meeting coach. You will provide personalized constructive feedback based on the conversation history.
-Your feedback should be a JSON array: 
+You are now acting as a client meeting coach. You will only provide constructive feedback on how the EY consultant behaves during the meeting in a format of JSON String.
     [{
         "Goal": "Quote the goal below",
         "Good behaviors": "[
             "Feedback rubric 1 with specific examples from the chat history",
-            "Feedback rubric 2 with specific examples from the chat history",
-            "",
-            "",
+            "Feedback rubric 2 with specific examples from the chat history"
         ]",
         "Areas to improve": [
             "Feedback rubric 1 with specific examples from the chat history",
-            "Feedback rubric 2 with specific examples from the chat history",
-            "",
-            "",
-        ]",
+            "Feedback rubric 2 with specific examples from the chat history"
+        ]"
     },
     {
         "Goal": "Quote the goal below",
         "Good behaviors": [
             "Feedback rubric 1 with specific examples from the chat history",
-            "Feedback rubric 2 with specific examples from the chat history",
-            "",
-            "",
+            "Feedback rubric 2 with specific examples from the chat history"
         ]",
         "Areas to improve": [
             "Feedback rubric 1 with specific examples from the chat history",
-            "Feedback rubric 2 with specific examples from the chat history",
-            "",
-            "",
-        ]",
+            "Feedback rubric 2 with specific examples from the chat history"
+        ]"
     }]
 Below is the feedback rubric:
 [
@@ -170,29 +159,29 @@ Below is the feedback rubric:
         "Areas to improve": [
             "Jump onto solutioning all too fast without even asking whether this is the most critical problem to solve",
             "Become too eager to sell"
-        ],
+        ]
     },
     {
         "Goal": "Establish the basis for a successful future business relationship with Steve personally and with Luse on a corporate level",
         "Good behaviors": [
             "Adjust your social style to that of your client",
-            "Demonstrate EQ",
+            "Demonstrate EQ"
         ],
         "Areas to improve": [
             "Ask close-ended questions",
-            "Not showing interest in the client's business",
-        ],
+            "Not showing interest in the client's business"
+        ]
     },
     {
         "Goal": "Demonstrate credibility for yourself and for EY",
         "Good behaviors": [
             "Make a good self-introduction that highlights your experience related to client's agenda",
-            "Bring the whole EY to the table: If you don't know the exact of something, make introductions to other EY points of contact who have relevant expertise",
+            "Bring the whole EY to the table: If you don't know the exact of something, make introductions to other EY points of contact who have relevant expertise"
         ],
         "Areas to improve": [
             "Pretend that you know all the answers",
-            "Keep talking past success stories",
-        ],
+            "Keep talking past success stories"
+        ]
     },
 ]  
 """
@@ -222,16 +211,12 @@ def get_feedbackai(request):
     # if len(chat_history) < 8:
     #     return JsonResponse({"response": "Please continue the conversation for longer"})
     # else:
-    concatenated_content = ""
-    for round in chat_history:
-        concatenated_content += round[0] + round[1]
     messages = [
         {
             "role": "system",
-            "content": concatenated_content + feedback,  # system message
+            "content": json.dumps(chat_history) + feedback,  # system message
         },
     ]
-    print("什么类别", type(concatenated_content + feedback))
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
@@ -239,7 +224,6 @@ def get_feedbackai(request):
     try:
         feedbackai = response.choices[0].message["content"].strip()
         print("模型回复", feedbackai)
-        # print(type(feedbackai))
         return JsonResponse({"response": feedbackai})
     except openai.error.OpenAIError as e:
         return JsonResponse({"status": "error", "message": str(e)})
@@ -250,7 +234,7 @@ assistant_message = []
 chat_history = []
 
 
-def ask_openai(user_message, assistant_message, message):
+def ask_openai(message):
     system_message_content = SYSTEM_PROMT
     messages = [
         {
@@ -258,26 +242,25 @@ def ask_openai(user_message, assistant_message, message):
             "content": system_message_content,  # system message
         },
     ]
+    # Add previous conversation to messages
+    for um, am in zip(user_message, assistant_message):
+        messages.append({"role": "user", "content": um})
+        messages.append({"role": "assistant", "content": am})
 
-    # Append the conversation_so_far to messages
-    for i in range(len(user_message)):
-        messages.append({"role": "user", "content": user_message[i]})
-        messages.append({"role": "assistant", "content": assistant_message[i]})
-        chat_history.append(
-            (
-                "Consultant:" + user_message[i],
-                "Steve Luse (CEO):" + assistant_message[i],
-            )
-        )
+    # Append the new user message
     messages.append({"role": "user", "content": message})
+
+    chat_history.append({"EY Consultant": message})
 
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
     )
-    print("!!CHAT HISTORY", chat_history)
+    print("刚刚喂进去了什么", messages)
     try:
         answer = response.choices[0].message["content"].strip()
+        messages.append({"role": "assistant", "content": answer})
+        chat_history.append({"Steve-Luse (CEO of Luse Holdings)": answer})
         return answer
     except openai.error.OpenAIError as e:
         return str(e)
@@ -290,8 +273,10 @@ def chatbot(request):
         # message is user input
         message = request.POST.get("message")
         # response is one line
-        response = ask_openai(user_message, assistant_message, message)
+        response = ask_openai(message)
         user_message.append(message)
+        print("我说了啥", user_message)
+        print("Steve说了啥", assistant_message)
         assistant_message.append(response)
         chat = Chat(
             message=message,
