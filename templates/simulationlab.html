@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class = "title">
+        <h1 style="text-align: center; margin-top: 5%;">👋 What do you want to practice today?</h1>
+</div>
+
+<div class = 'filter container-fluid col-md-8 offset-md-2' style = 'margin-bottom:2%'>
+  <div class="row" style="margin-top: 2%;">
+      <label for="service-line-filter">Service Line:</label>
+        <select id="service-line-filter" onchange="applyFilter()">
+          <option value="All EY">All EY</option>
+          <option value="SaT">SaT</option>
+          <option value="Markets">Markets</option>
+        </select>
+      <label for="course-name-filter">Course Name:</label>
+        <select id="course-name-filter" onchange="applyFilter()">
+          <option value="Client-centric conversations">Client-centric conversations</option>
+          <option value="Hard conversations">Hard conversations</option>
+          <option value="Sell and Separate Price Negotiation">Sell and Separate Price Negotiation</option>
+        </select> 
+  </div>
+</div>
+
+    <script>
+    function applyFilter() {
+      const serviceLine = document.getElementById('service-line-filter').value;
+      filterCards({serviceLine: serviceLine, course:courseName});
+    }
+    </script>
+
+    <script>
+    function filterCards(criteria) {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        const serviceLine = card.getAttribute('data-service-line');
+        const courseName = card.getAttribute('data-course');
+
+        // Check if card matches the filter criteria
+        if (serviceLine === criteria.serviceLine || course === criteria.course) {
+          card.style.display = 'block'; // Show card if it matches
+        } else {
+          card.style.display = 'none'; // Hide card if it does not match
+        }
+      });
+    }
+</script> 
+</div>  
+
+<div class="card-container container-fluid col-md-8 offset-md-2">
+    <!-- Card 1 -->
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;" 
+            data-service-line="SaT" 
+            data-course="Client-centric conversations">
+          <img class="card-img-top" src="https://www.investopedia.com/thmb/3F88qixYdVX8vr16RBD808oQvR8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Market_Final-ffc28532c0de498499ba6e5e985645b9.jpg">
+          <div class="card-body">
+            <h2 class="card-title">Client-centric conversations</h2>
+            <p class="badge badge-light">Markets</p>
+            <p class="badge badge-info">Client-centric conversations</p>
+            <div class="card-text"> Engage in role-playing scenarios to refine your communication skills and build stronger, trust-based relationships.</div>
+            <a href="{% url 'chatbot' %}" class="btn btn-primary">Pratice</a>
+          </div>
+        </div>
+      </div>
+  <!-- Card 2 -->
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;" 
+          data-service-line="All EY" 
+          data-course="Have hard conversations" >
+          <img class="card-img-top" src="https://www.questionpro.com/blog/wp-content/uploads/2022/06/client-management.jpg" alt="Client">
+          <div class="card-body">
+            <h2 class="card-title">Hard conversations</h2>
+            <p class="badge badge-light">All EY</p>
+            <p class="badge badge-info">Hard conversations</p>
+            <div class="card-text">Engage in real-life scenarios to develop the skills needed to address challenging topics while maintaining respect and understanding.</div>
+            <a href="https://newdirectionfamilylaw.com/wp-content/uploads/2019/11/Selling-a-Home-During-a-Separation.jpg" class="btn btn-primary">Pratice</a>
+          </div>
+        </div>
+      </div>
+
+    <!-- Card 3 -->
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;" 
+        data-service-line="SaT" 
+        data-course="Sell and Separate" 
+        data-success-factor-code="124gh89s">
+        <img class="card-img-top" src="https://newdirectionfamilylaw.com/wp-content/uploads/2019/11/Selling-a-Home-During-a-Separation.jpg" alt="Client">
+
+        <div class="card-body">
+          <h2 class="card-title">Sell and Separate Price Negotiation</h2>
+          <p class="badge badge-light">SaT</p>
+          <p class="badge badge-info">Sell and Separate</p>
+          <div class="card-text">Through role-playing and case studies, you'll develop skills to maintain objectivity and professionalism, ensuring successful and efficient sales transactions.</div>
+          <a href="https://newdirectionfamilylaw.com/wp-content/uploads/2019/11/Selling-a-Home-During-a-Separation.jpg" class="btn btn-primary">Pratice</a>
+        </div>
+        </div>
+      </div>
+  </div>
+{% endblock %}

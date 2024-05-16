@@ -31,24 +31,25 @@ def get_system_message_content(role, context, personality, reminders):
 
 
 # Example usage
-role = "You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time."
+role = "You are playing the role of Steve, the owner and CEO of Vertex Construction, a century-old family business based in Chicago. You're meeting with an consultant from ABC Company for the first time."
 
 context = json.dumps(
     {
-        "Company Background": "Luse Holdings started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses.",
+        "Company Background": "Vertex Construction started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses.",
         "Challenges": [
-            "1. Luse recently lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.",
-            "2. Succession issues. There's no clear successor in the Luse family. While some family members show interest, their capability and willingness to lead remain uncertain",
+            "1. Vertex Construction recently lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.",
+            "2. Succession issues. There's no clear successor in the family. While some family members show interest, their capability and willingness to lead remain uncertain",
+            "3. Balancing your exit and the inheritance of the family business.",
         ],
         "Potential Solutions": [
             "1. Stay the Course: Continue growth organically and through acquisitions. Consider transitioning to non-union to secure more contracts. Identify potential family successors or hire an external CEO. Questions: What are the growth areas? How to maintain employee motivation and uphold family values?",
             "2. Break it Up: Segregate operating companies. Sell less productive businesses. Questions: What legacy do you wish to leave behind?",
-            "3. Sell it Off: Engage an advisor to sell all Luse companies and associated real estate. Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?",
+            "3. Sell it Off: Engage an advisor to sell the company and all its subsidiaries as well as associated real estate. Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?",
         ],
     }
 )
 
-personality = "You are professional and kind. You don't like people who wants to sell you things quickly."
+personality = "You are professional and kind. You don't like people who want to sell you things quickly."
 
 reminders = json.dumps(
     [
@@ -123,7 +124,7 @@ Steve Luse: You too, Alex. Take care.
 
 
 feedback = """
-You are now acting as a client meeting coach. You will only provide constructive feedback on how the EY consultant behaves during the meeting in a format of JSON String.
+You are now acting as a client meeting coach. You will only provide constructive feedback on how the consultant behaves during the meeting in a format of JSON String.
     [{
         "Goal": "Quote the goal below",
         "Good behaviors": "[
@@ -162,7 +163,7 @@ Below is the feedback rubric:
         ]
     },
     {
-        "Goal": "Establish the basis for a successful future business relationship with Steve personally and with Luse on a corporate level",
+        "Goal": "Establish the basis for a successful future business relationship with Steve personally and with Vertex Construction on a corporate level",
         "Good behaviors": [
             "Adjust your social style to that of your client",
             "Demonstrate EQ"
@@ -173,10 +174,10 @@ Below is the feedback rubric:
         ]
     },
     {
-        "Goal": "Demonstrate credibility for yourself and for EY",
+        "Goal": "Demonstrate credibility for yourself and for your company",
         "Good behaviors": [
             "Make a good self-introduction that highlights your experience related to client's agenda",
-            "Bring the whole EY to the table: If you don't know the exact of something, make introductions to other EY points of contact who have relevant expertise"
+            "Leverage the team behind you: If you don't know the exact of something, make introductions to other points of contact in your company who have relevant expertise"
         ],
         "Areas to improve": [
             "Pretend that you know all the answers",
@@ -250,7 +251,7 @@ def ask_openai(message):
     # Append the new user message
     messages.append({"role": "user", "content": message})
 
-    chat_history.append({"EY Consultant": message})
+    chat_history.append({"You-Consultant": message})
 
     response = openai.ChatCompletion.create(
         model="gpt-4",
@@ -260,7 +261,7 @@ def ask_openai(message):
     try:
         answer = response.choices[0].message["content"].strip()
         messages.append({"role": "assistant", "content": answer})
-        chat_history.append({"Steve-Luse (CEO of Luse Holdings)": answer})
+        chat_history.append({"Steve-Client CEO": answer})
         return answer
     except openai.error.OpenAIError as e:
         return str(e)
@@ -286,3 +287,7 @@ def chatbot(request):
         chat.save()
         return JsonResponse({"message": message, "response": response})
     return render(request, "chatbot.html", {"chats": chats})
+
+
+def simulationlab(request):
+    return render(request, "simulationlab.html")

@@ -2,8 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.chatbot, name="chatbot"),
-    path("clear_chat/", views.clear_chat, name="clear_chat"),
+    path("chatbot", views.chatbot, name="chatbot"),
     path(
         "get_feedbackai_demo_purpose/",
         views.get_feedbackai_demo_purpose,
@@ -11,6 +10,6 @@ urlpatterns = [
     ),
     path("scenariocreator/", views.scenariocreator, name="scenariocreator"),
     path("get_feedbackai/", views.get_feedbackai, name="getfeedbackai"),
-    # path("register", views.register, name="register"),
+    path("", views.simulationlab, name="simulationlab"),
     # path("logout", views.logout, name="logout"),
 ]

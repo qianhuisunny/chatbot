@@ -27,13 +27,17 @@
   } 
 
   .sent {
-    background-color: #dcf8c6;
+    background-color: #ffffff;
     align-self: flex-end;
   }
 
   .received {
     background-color: #dbf0fe;
     align-self: flex-start;
+  }
+
+  .get-feedback-button .get-feedback-demo-button{
+    margin-bottom: 20px;
   }
 
   .message-form {
@@ -43,7 +47,8 @@
     left: 0;
     right: 0;
     padding: 10px;
-    background-color: #f8f9fa;
+    background-color: #e3f2fd;
+    height: 10%;
   }
 
   .message-input {
@@ -56,78 +61,58 @@
     border-radius: 0;
   }
 
+  .message-input, .btn-send {
+    height: 100%
+}
+
   .main-container {
     display: flex;
     height: 100%;
-  }
+  } 
 
-  .scenario-container {
+ .scenario-container {
     position: fixed;
     width: 40%;
-    height: 100%;
+    height: 85%;
     overflow-y: auto;
-    top: 0;
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  } 
+
+  .btn-feedback{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
   }
 
   .chat-container {
   margin-left: 40%; /* Adjust as needed */
-  }
+  } 
 
   body {
       font-family: 'Arial', sans-serif;
       line-height: 1.6;
       background-color: #f5f5f5;
-    }
-    .main-container {
-      margin-top: 20px;
-    }
-    h1, h3, h4 {
+  } 
+  h3, h4 {
       color: #333;
-    }
-    h1 {
+  }
+  h4 {
       margin-top: 20px;
       margin-bottom: 20px;
-    }
-    h4 {
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }    
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    ol {
-      padding-left: 20px;
-    }
-    ul {
-      padding-left: 20px;
-    }
-    .button-container {
+  }    
+  .button-container {
       display: flex;
       justify-content: space-between;
-      margin-top: 20px;
-    }
-    .learning-objectives {
+  }
+  .learning-objectives {
       background-color: #f0f0f0; /* or any color you prefer */
       padding: 15px;
       border-radius: 5px;
       margin-bottom: 20px;
-    }
-    .learner-context {
+  }
+  .learner-context {
       padding-bottom: 30px;
-    }
+  }
   .spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-radius: 50%;
@@ -163,33 +148,15 @@
 <div class="container-fluid">
   <div class="row main-container">
     <div class="scenario-container col-md-5">
-      <h1>Client Meeting Role Play</h1>
-      <div class="learning-objectives">
-        <b>The Success of the Meeting could be defined as:</b>
-          <li>to come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint;</li>
-          <li>to establish the basis for a successful future business relationship with Steve personally and with Luse on a corporate level;</li>
-          <li>to demonstrate credibility for yourself and for EY.</li>
-      </div>
-      <div class="button-container">
-        <button class="begin-chat-button">Begin Chat</button>
-        <button class="get-feedback-demo-button">Get Feedback Demo</button>
-        <button class="get-feedback-button">Get Feedback</button>
-      </div>
-      <div class="link-container">
-        <a href=" "></a>
-        <a href="https://docs.google.com/document/d/1EhNFagDADcG2TH8OQ_kk5It5HWYMbi7KJ9zGSwENdkc/edit?usp=sharing">See the Chat History Demo</a>
-        <a href=" "></a>
-      </div>
-
-      <div class="learner-context">
-        <h4>About the Family-Owned Business: Luse Holdings Inc.</h4>
-        <p>Your Partner onboarded you to this new client Luse Holdings, a Chicago-based family-owned company that has had over 100 years of history. Starting as a roofing contractor, Luse Holdings now has six operating companies: 3 contracting businesses which include a union labor contracting business, non-union labor contracting business, medical staffing business, 
-          2 Consulting & Safety Services providing safety consulting, safety personnel staffing, safety training, and occupational health services to the construction industry, 1 distribution service as a vertical integration. 
+    <div class="learner-context">
+        <h4>Background</h4>
+        <p>Your leader brings you into an account meeting with the CEO, Steve, of your client Vertex Construction, a Chicago-based family-owned company with over 100 years of history. Starting as a roofing contractor, Vertex Construction now grows into six operating companies: three contracting businesses with union and non-union labor, one medical staffing business, and two safety consulting businesses. 
         </p>
-        <h4>What are the challenges Luse Holdings is facing?</h4>
+        <h4>Challenges</h4>
           <ol>
-            <li>In May 2015, Luse lost a bid to a non-union contractor for the first time, making them contemplate on a potential pivot in their strategy due to market-level shifts in the cost of doing business. They are considering whether to go non-union in Chicago and whether to exit the contracting business altogether.</li>
-            <li>Another challenge is the lack of an obvious successor within the Luse family. It's uncertain if any fifth-generation member would have both the competencies and the desire to lead the business. As Steve Luse approaches his ideal retirement age, the company's strategic plan needs to incorporate his personal exit strategy.</li>
+            <li>In May 2015, Vertex Construction lost a bid to a non-union contractor for the first time, making them contemplate a potential pivot in their staffing strategy based on market conditions. They are considering whether to go non-union in Chicago or to exit the contracting business altogether.</li>
+            <li>Another challenge is the lack of an obvious successor within the family. It's uncertain if any fifth-generation member would have both the competencies and the desire to lead the business. </li>
+            <li>As Steve approaches his ideal retirement age, the company's strategic plan needs to incorporate his personal exit strategy.</li>
           </ol>
           <h4>What are some potential solutions:</h4>
           <ol class="solution">
@@ -200,22 +167,19 @@
               <strong>Break it up:</strong> Separate the company’s intermingled operating companies into independent entities, then sell off the most difficult or least productive businesses, taking money off the table to invest elsewhere and to diversify risk with some family liquidity. Move forward not with a bigger business, but with a more streamlined one.
             </li>
             <li>
-              <strong>Sell it off:</strong> Work with an outside advisor to sell the entire Luse family of companies as well as the real estate owned by the holding company. Free up capital to fund other family interests.
+              <strong>Sell it off:</strong> Work with an outside advisor to sell the entire company, its subsidiaries as well as the real estate owned by the holding company. Free up capital to fund other family interests.
             </li>
           </ol>
-          <p>The advisory board urged Steve (the CEO) to choose a path within the next six months.</p>
-      
-          <h4>Your Role as an EY Consultant:</h4>
-          <p>You have set up a meeting with Steve, the CEO/Owner of Luse. You’ve had a few previous meetings with Steve, however as you’ve recently transitioned onto the account from the previous account leader, you don’t yet have a very close relationship. You’re new to the account and want to create the right impression and help Steve think through ideas to help Luse navigate the increasingly challenging environment and explore next steps, to better understand views of other key stakeholders and also build relationships across the company. You feel there is a lot of opportunity to help Steve and the board navigate what’s ahead for the company, and for Steve and his family.</p>
-      
-          <h4>Your broad objectives are:</h4>
+          <h4>Your role as the business advisor:</h4>
+          <p>It’s your first time meeting Steve, the CEO. You think there are a lot of opportunity to help him and the board navigate what’s ahead for the company, Steve, and his family. Your objectives for the meeting include: </p>
           <ol class="objective">
-            <li>to come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint;</li>
-            <li>to establish the basis for a successful future business relationship with Steve personally and with Luse on a corporate level;</li>
-            <li>to demonstrate credibility for yourself and for EY.</li>
-          </ol>
-          <p>However, as part of your preparation for the meeting, it is up to you to define your own specific criteria for measuring your team’s success.You have not been able to find out much about Steve personally, but from conversations with others you understand that Steve is incredibly passionate about Luse, its people, and its legacy as a company. We don’t have any evidence which suggests that Steve is a particularly strong supporter of EY, but we don’t think he is particularly negative towards us either. In discussions with the previous account leader, Steve has been described as passionate, opinionated, and charismatic.</p>
-      </div>
+            <li>Come away with an understanding of the main strategic issues that are affecting the company from Steve’s viewpoint.</li>
+            <li>Establish the basis for a successful future business relationship with Steve personally and with Vertex Construction on a corporate level.</li>
+            <li>Demonstrate credibility for yourself and your company.</li>
+          </ol> 
+            <button class="begin-chat-button btn btn-primary btn-feedback">Begin Chat</button><br>
+            <button class="get-feedback-demo-button btn btn-primary btn-feedback">Get Feedback Demo</button>
+            <button class="get-feedback-button btn btn-primary btn-feedback">Get Feedback</button>
     </div>
     <div class="chat-container col-md-7">
       <ul class="list-unstyled messages-list">
@@ -225,7 +189,7 @@
           <li class="message sent">
             <div class="message-text">
               <div class="message-sender">
-                <b>You-EY Consultant</b>
+                <b>You-Consultant</b>
               </div>
               <div class="message-content">
                 {{chat.message}}
@@ -236,29 +200,21 @@
           <li class="message received">
             <div class="message-text">
               <div class="message-sender">
-                <b>Steve Luse-CEO of Luse Holdings</b>
+                <b>Steve-Client CEO</b>
               </div>
               <div class="message-content">
                 {{chat.response}}
               </div>
             </div>
           </li>
-
           {% endif %}
           {% endfor %}
         </ul>
         <ul id="goalsList"></ul>
-
-
     </div>
   </div>
 </div>      
-
-  <div>
-    <br><br>
-    <br><br>
-    <br><br>
-  </div>
+<div>
   <form class="message-form">
     {%csrf_token%}
     <div class="input-group">
@@ -288,7 +244,7 @@
     messageItem.innerHTML = `
       <div class="message-text">
         <div class="message-sender">
-          <b>You-EY Consultant</b>
+          <b>You-Consultant</b>
         </div>
         <div class="message-content">
           ${message}
@@ -314,7 +270,7 @@
         messageItem.innerHTML = `
         <div class="message-text">
           <div class="message-sender">
-            <b>Steve-CEO of Luse Holdings</b>
+            <b>Steve-Client CEO</b>
           <div>
           <div class="message-content">
             ${response}
