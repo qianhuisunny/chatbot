@@ -9,7 +9,7 @@ from .models import Chat
 from memory_profiler import profile
 from django.utils import timezone
 
-openai_api_key = "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"  # Replace YOUR_API_KEY with your openai apikey
+openai_api_key = ""  # Replace YOUR_API_KEY with your openai apikey
 openai.api_key = openai_api_key
 conversation_so_far = []
 

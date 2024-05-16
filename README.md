@@ -8,13 +8,13 @@
 - Easily extendable and customizable for specific use cases
 
 ## Screens
-- ![Scenario screen](images/scenarios.png)
+![Scenario screen](images/scenarios.png)
 - Where all the user-created scenarios could be found here. Currently only implemented front end.
 
-- ![Simcreator](images/simcreator.png)
+![Simcreator](images/simcreator.png)
 - Currently only implemented the front end. 
 
-- ![Simulation](images/simulation.png)
+![Simulation](images/simulation.png)
 - Interact with the bot and get feedback 
 
 
