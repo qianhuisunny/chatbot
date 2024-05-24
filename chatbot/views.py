@@ -5,7 +5,7 @@ import json
 import os
 from django.contrib import auth
 from django.contrib.auth.models import User
-from .models import Chat
+from .models import *
 from memory_profiler import profile
 from django.utils import timezone
 
@@ -13,8 +13,71 @@ openai_api_key = ""  # Replace YOUR_API_KEY with your openai apikey
 openai.api_key = openai_api_key
 conversation_so_far = []
 
-# WORK_DIR = os.getcwd()
-# CONTENT_FILE_NAME = "system_message2.txt"
+from django.core.management.base import BaseCommand
+from .models import *
+
+
+def summarizeContexttoBot(request):
+    pass
+
+
+def get_feedback_rubric(request, objective, good_behavior, bad_behavior):
+    return feedback_rubric
+
+
+class Command(BaseCommand):
+    help = "Create a scenario with related objects"
+
+    def handle(self, *args, **kwargs):
+        # Create a scenario
+        scenario = Scenario.objects.create(scenario="Client conversations")
+
+        # Create a role, context, and personality for the scenario
+        role = Role.objects.create(
+            scenario=scenario,
+            role="You are playing the role of Steve, the owner and CEO of Vertex Construction, a century-old family business based in Chicago. You're meeting with an consultant from ABC Company for the first time.",
+        )
+        print("role:", role)
+
+        context = Context.objects.create(
+            scenario=scenario,
+            context="""Company Background: Vertex Construction started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses.
+
+Challenges:
+
+Vertex Construction recently lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.
+Succession issues. There's no clear successor in the family. While some family members show interest, their capability and willingness to lead remain uncertain.
+Balancing your exit and the inheritance of the family business.
+Potential Solutions:
+
+Stay the Course: Continue growth organically and through acquisitions. Consider transitioning to non-union to secure more contracts. Identify potential family successors or hire an external CEO. Questions: What are the growth areas? How to maintain employee motivation and uphold family values?
+Break it Up: Segregate operating companies. Sell less productive businesses. Questions: What legacy do you wish to leave behind?
+Sell it Off: Engage an advisor to sell the company and all its subsidiaries as well as associated real estate. Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?
+
+
+
+
+
+
+""",
+        )
+        print("Context:", context)
+
+        personality = Personality.objects.create(
+            scenario=scenario,
+            personality="You are professional and kind. You don't like people who want to sell you things quickly.",
+        )
+
+        Reminders.objects.create(
+            scenario=scenario, reminder="Introduce yourself in a friendly manner"
+        )
+        Reminders.objects.create(
+            scenario=scenario, reminder="Be conversational and professional"
+        )
+
+        self.stdout.write(
+            self.style.SUCCESS("Successfully created scenario with related objects")
+        )
 
 
 def scenariocreator(request):
@@ -31,25 +94,25 @@ def get_system_message_content(role, context, personality, reminders):
 
 
 # Example usage
-role = "You are playing the role of Steve, the owner and CEO of Vertex Construction, a century-old family business based in Chicago. You're meeting with an consultant from ABC Company for the first time."
+# role = "You are playing the role of Steve, the owner and CEO of Vertex Construction, a century-old family business based in Chicago. You're meeting with an consultant from ABC Company for the first time."
 
-context = json.dumps(
-    {
-        "Company Background": "Vertex Construction started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses.",
-        "Challenges": [
-            "1. Vertex Construction recently lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.",
-            "2. Succession issues. There's no clear successor in the family. While some family members show interest, their capability and willingness to lead remain uncertain",
-            "3. Balancing your exit and the inheritance of the family business.",
-        ],
-        "Potential Solutions": [
-            "1. Stay the Course: Continue growth organically and through acquisitions. Consider transitioning to non-union to secure more contracts. Identify potential family successors or hire an external CEO. Questions: What are the growth areas? How to maintain employee motivation and uphold family values?",
-            "2. Break it Up: Segregate operating companies. Sell less productive businesses. Questions: What legacy do you wish to leave behind?",
-            "3. Sell it Off: Engage an advisor to sell the company and all its subsidiaries as well as associated real estate. Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?",
-        ],
-    }
-)
+# context = json.dumps(
+#     {
+#         "Company Background": "Vertex Construction started as a roofing contractor and has expanded over the years. It now boasts six diverse operating companies, including union/un-union labor contracting business, several consulting and staffing businesses.",
+#         "Challenges": [
+#             "1. Vertex Construction recently lost a bid to a non-union contractor. You start to reconsider the company's union stance and the potential sale of the contracting business.",
+#             "2. Succession issues. There's no clear successor in the family. While some family members show interest, their capability and willingness to lead remain uncertain",
+#             "3. Balancing your exit and the inheritance of the family business.",
+#         ],
+#         "Potential Solutions": [
+#             "1. Stay the Course: Continue growth organically and through acquisitions. Consider transitioning to non-union to secure more contracts. Identify potential family successors or hire an external CEO. Questions: What are the growth areas? How to maintain employee motivation and uphold family values?",
+#             "2. Break it Up: Segregate operating companies. Sell less productive businesses. Questions: What legacy do you wish to leave behind?",
+#             "3. Sell it Off: Engage an advisor to sell the company and all its subsidiaries as well as associated real estate. Questions: How to ensure a family's sustainable future post-sale? What would an ideal exit strategy look like?",
+#         ],
+#     }
+# )
 
-personality = "You are professional and kind. You don't like people who want to sell you things quickly."
+# personality = "You are professional and kind. You don't like people who want to sell you things quickly."
 
 reminders = json.dumps(
     [
@@ -66,14 +129,6 @@ reminders = json.dumps(
 
 # Call the function
 SYSTEM_PROMT = get_system_message_content(role, context, personality, reminders)
-
-
-def clear_chat(request):
-    global user_message
-    user_message.clear()
-    global assistant_message
-    assistant_message.clear()
-    return JsonResponse({"status": "success"})
 
 
 # Show Feedback
@@ -123,7 +178,7 @@ Steve Luse: You too, Alex. Take care.
 """
 
 
-feedback = """
+feedback_instruction = """
 You are now acting as a client meeting coach. You will only provide constructive feedback on how the consultant behaves during the meeting in a format of JSON String.
     [{
         "Goal": "Quote the goal below",
@@ -146,8 +201,9 @@ You are now acting as a client meeting coach. You will only provide constructive
             "Feedback rubric 1 with specific examples from the chat history",
             "Feedback rubric 2 with specific examples from the chat history"
         ]"
-    }]
-Below is the feedback rubric:
+    }]"""
+
+feedback_rubric = """
 [
     {
         "Goal": "Come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint",
@@ -193,7 +249,9 @@ def get_feedbackai_demo_purpose(request):
     messages = [
         {
             "role": "system",
-            "content": chat_history_demo + feedback,  # system message
+            "content": chat_history_demo
+            + feedback_instruction
+            + feedback_rubric,  # system message
         },
     ]
     response = openai.ChatCompletion.create(

@@ -24,6 +24,7 @@
         margin-bottom: 10px; /* Adds space below each input field */
         width: 100%; /* or any specific width */
         height: auto;
+        overflow-y: auto;
     }
     .form-high {
         margin-bottom: 10px; /* Adds space below each input field */
@@ -89,25 +90,21 @@
                         </div>
                         <!-- Form fields for step 1 -->
                         <h5>Learning Objective</h5>
-                        <input type="textarea" name="fname" class="form-control" placeholder="Come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint"/>
+                        <input type="textarea" name="Objective" class="form-control" placeholder="Come away with an understanding of the main strategic issues which are affecting the company from Steve’s viewpoint" required/>
                         <b>Good Behaviors:</b>
-                        <input type="textarea" name="fname" class="form-control" placeholder="Ask open-ended questions"/>
-                        <input type="textarea" name="lname" class="form-control" placeholder="Play back what you hear in your own words"/>
-                        <input type="textarea" name="lname" class="form-control" placeholder="Ask the client to prioritize which one is the most critical issue on their mind"/>
-                        <input type="textarea" name="lname" class="form-control" placeholder="Ask for measurable impact of this issue to the client"/>
+                        <input type="textarea" name="GoodBehaviors" class="form-control" placeholder="Ask open-ended questions" required/>
+                        <input type="textarea" name="GoodBehaviors" class="form-control" placeholder="Play back what you hear in your own words"/>
+                        <input type="textarea" name="GoodBehaviors" class="form-control" placeholder="Ask the client to prioritize which one is the most critical issue on their mind"/>
+                        <input type="textarea" name="GoodBehaviors" class="form-control" placeholder="Ask for measurable impact of this issue to the client"/>
                         <b>Areas to Improve:</b>
-                        <input type="textarea" name="fname" class="form-control" placeholder="Jump onto solutioning all too fast without even asking whether this is the most critical problem to solve"/>
-                        <input type="textarea" name="lname" class="form-control" placeholder="Become too eager to sell"/>
-                        <input type="textarea" name="lname" class="form-control" placeholder=""/>
-                        <!-- ... other fields ... -->
-                        <div id="additionalForms"></div>
-                        <button type="button" class="btn btn-primary" onclick="addForm()">Add One More</button>
+                        <input type="textarea" name="BadBehaviors" class="form-control" placeholder="Jump onto solutioning all too fast without even asking whether this is the most critical problem to solve" required/>
+                        <input type="textarea" name="BadBehaviors" class="form-control" placeholder="Become too eager to sell"/>
                         <button type="button" class="btn btn-primary next-step">Next</button>
                     </div>
                     <div class="tab-pane" id="step2">
                         <!-- Form fields for step 2 -->
                         <h5>Describe the role of the AI Agent</h5>
-                        <input type="textareaarea" name="textarea" class="form-high" placeholder="You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time."/>
+                        <input type="textareaarea" name="Role" class="form-high" placeholder="You are playing the role of Steve Luse, the owner and CEO of Luse Holdings LLC, a century-old family business based in Chicago. You're meeting with an EY consultant for the first time."/>
                         <!-- ... other fields ... -->
                         <button type="button" class="btn btn-secondary prev-step">Previous</button>
                         <button type="button" class="btn btn-primary next-step">Next</button>
