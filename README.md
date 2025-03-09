@@ -15,6 +15,8 @@
 - Currently only implemented the front end. 
 
 ![Simulation](images/simulation.png)
-- Interact with the bot and get feedback 
+- Interact with the bot and get feedback
 
+![1](images/1.png)
+- Interact with the bot and get feedback 
 
